@@ -1,11 +1,16 @@
 <script setup></script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <div id="app">
+    <nav>
+      <ul>
+        <li><router-link to="/">Home</router-link></li>
+        <li><router-link to="/add">Add Subscription</router-link></li>
+        <li><router-link to="/simulation">Simulation</router-link></li>
+      </ul>
+    </nav>
+    <router-view />
+  </div>
 </template>
 
 <style scoped></style>
