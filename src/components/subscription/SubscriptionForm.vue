@@ -1,5 +1,6 @@
 <script setup>
 import { reactive } from 'vue'
+import PaymentPlaformCard from './PaymentPlaformCard.vue'
 const emit = defineEmits(['submit'])
 
 const form = reactive({
@@ -54,6 +55,15 @@ function handleReset() {
     }
 }
 
+const categories = [
+  { value: 'streaming', label: 'Streaming' },
+  { value: 'music', label: 'Música' },
+    { value: 'gaming', label: 'Juegos' },
+    { value: 'software', label: 'Software' },
+    { value: 'education', label: 'Educación' },
+    { value: 'other', label: 'Otra' }
+]
+
 </script>
 
 <template>
@@ -73,12 +83,9 @@ function handleReset() {
             <div class="field">
                 <label for="category">Categoría:</label>
                 <select id="category" name="category" v-model="form.category">
-                    <option value="streaming">Streaming</option>
-                    <option value="music">Música</option>
-                    <option value="gaming">Juegos</option>
-                    <option value="software">Software</option>
-                    <option value="education">Educación</option>
-                    <option value="other">Otra</option>
+                    <option v-for="cat in categories" :key="cat.value" :value="cat.value">
+                        {{ cat.label }}
+                    </option>
                 </select>
             </div>
 
@@ -101,32 +108,7 @@ function handleReset() {
             <h2>Paso 2: Datos opcionales</h2>
             <div class="field">
                 <label>Plataforma de pago:</label>
-                <div class="cardGroupPaymentPlatform">
-                    <button type="button" class="cardPaymentPlatform" :class="{ active: form.paymentPlatform === 'creditCard' }"
-                        @click="form.paymentPlatform = 'creditCard'">
-                        <span class="cardTitle">Tarjeta de crédito</span>
-                    </button>
-                    <button type="button" class="cardPaymentPlatform" :class="{ active: form.paymentPlatform === 'appleStore' }"
-                        @click="form.paymentPlatform = 'appleStore'">
-                        <span class="cardTitle">Apple Store</span>
-                    </button>
-                    <button type="button" class="cardPaymentPlatform" :class="{ active: form.paymentPlatform === 'playStore' }"
-                        @click="form.paymentPlatform = 'playStore'">
-                        <span class="cardTitle">Play Store</span>
-                    </button>
-                    <button type="button" class="cardPaymentPlatform" :class="{ active: form.paymentPlatform === 'paypal' }"
-                        @click="form.paymentPlatform = 'paypal'">
-                        <span class="cardTitle">PayPal</span>
-                    </button>
-                    <button type="button" class="cardPaymentPlatform" :class="{ active: form.paymentPlatform === 'web' }"
-                        @click="form.paymentPlatform = 'web'">
-                        <span class="cardTitle">Web</span>
-                    </button>
-                    <button type="button" class="cardPaymentPlatform" :class="{ active: form.paymentPlatform === 'other' }"
-                        @click="form.paymentPlatform = 'other'">
-                        <span class="cardTitle">Otros</span>
-                    </button>
-                </div>
+                <PaymentPlaformCard v-model="form.paymentPlatform" />
             </div>
             <div class="field">
                 <label for="cancellationLink">Link de cancelación:</label>
@@ -218,35 +200,6 @@ function handleReset() {
 .cardTitle {
     font-weight: 700;
 }
-
-.cardGroupPaymentPlatform {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
-}
-
-.cardPaymentPlatform {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    padding: 16px;
-    border: 2px solid #d8d8d8;
-    border-radius: 14px;
-    background: #fff;
-    text-align: left;
-    cursor: pointer;
-    transition: transform 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
-}
-
-.cardPaymentPlatform:hover {
-    border-color: #999;
-}
-
-.cardPaymentPlatform.active {
-    transform: scale(1.02);
-    border-color: #111;
-    background-color: #f3f3f3;
-}   
 
 .formActions {
     display: flex;
