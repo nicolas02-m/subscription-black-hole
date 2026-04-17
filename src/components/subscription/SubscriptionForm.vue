@@ -1,6 +1,8 @@
 <script setup>
 import { reactive } from 'vue'
 import PaymentPlaformCard from './PaymentPlaformCard.vue'
+import { CATEGORIES } from '@/utils/constants'
+
 const emit = defineEmits(['submit'])
 
 const form = reactive({
@@ -55,15 +57,6 @@ function handleReset() {
     }
 }
 
-const categories = [
-  { value: 'streaming', label: 'Streaming' },
-  { value: 'music', label: 'Música' },
-    { value: 'gaming', label: 'Juegos' },
-    { value: 'software', label: 'Software' },
-    { value: 'education', label: 'Educación' },
-    { value: 'other', label: 'Otra' }
-]
-
 </script>
 
 <template>
@@ -83,7 +76,7 @@ const categories = [
             <div class="field">
                 <label for="category">Categoría:</label>
                 <select id="category" name="category" v-model="form.category">
-                    <option v-for="cat in categories" :key="cat.value" :value="cat.value">
+                    <option v-for="cat in CATEGORIES" :key="cat.value" :value="cat.value">
                         {{ cat.label }}
                     </option>
                 </select>

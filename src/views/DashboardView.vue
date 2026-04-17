@@ -1,10 +1,17 @@
 <script setup>
+import DashboardActions from '@/components/dashboard/DashboardActions.vue'
+import SubscriptionList from '@/components/dashboard/SubscriptionList.vue'
+import ExpenseSummary from '@/components/dashboard/ExpenseSummary.vue'
+import PlanetVisualisation from '@/components/dashboard/PlanetVisualisation.vue'
 </script>
 
 <template>
   <div>
     <h1>Dashboard</h1>
-    <p>Welcome to the Dashboard!</p>
+    <ExpenseSummary />
+    <DashboardActions />
+    <PlanetVisualisation />
+    <SubscriptionList />
   </div>
 </template>
 
