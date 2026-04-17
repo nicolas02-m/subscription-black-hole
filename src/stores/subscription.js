@@ -1,4 +1,7 @@
 import { defineStore } from "pinia";
+import { useLocalStorage } from "@/composables/useLocalStorage";
+
+const { saveSubscriptions, loadSubscriptions } = useLocalStorage();
 
 export const useSubscriptionStore = defineStore("subscription", {
   state: () => ({
@@ -7,20 +10,17 @@ export const useSubscriptionStore = defineStore("subscription", {
   actions: {
     addSubscription(subscription) {
       this.subscriptions.push(subscription);
-      this.saveSubscriptions();
+      saveSubscriptions(this.subscriptions);
     },
     deleteSubscription(id) {
       this.subscriptions = this.subscriptions.filter(sub => sub.id !== id);
-      this.saveSubscriptions();
+      saveSubscriptions(this.subscriptions);
     },
 
-    saveSubscriptions() {
-      localStorage.setItem('subscriptions', JSON.stringify(this.subscriptions));
-    },
-    loadSubscriptions() {
-      const data = localStorage.getItem('subscriptions');
+    initSubscriptions() {
+      const data = loadSubscriptions();
       if (data) {
-        this.subscriptions = JSON.parse(data);
+        this.subscriptions = data;
       }
     }
 

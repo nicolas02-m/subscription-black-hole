@@ -30,7 +30,7 @@ const onCategorySelected = (cat) => {
     <div class="subscription-list">
         <div class="header">
             <h2>Subscription List</h2>
-            <CategoryFilter :categories="categories" @categorySelected="onCategorySelected" />
+            <CategoryFilter :categories="usedCategories" @categorySelected="onCategorySelected" />
         </div>
         <section class="items">
             <div class="categories">

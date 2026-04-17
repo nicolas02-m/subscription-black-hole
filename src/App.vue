@@ -6,7 +6,7 @@ const store = useSubscriptionStore();
 
 onMounted(() => {
   document.title = 'Subscription Black Hole';
-  store.loadSubscriptions();
+  store.initSubscriptions();
 });
 </script>
 
