@@ -5,6 +5,7 @@ import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router'
 import { computed } from 'vue'
 import CancellationGuide from '@/components/subscription/CancellationGuide.vue'
+import FrictionReportForm from '@/components/subscription/FrictionReportForm.vue'
 
 const route = useRoute()
 const subscriptionStore = useSubscriptionStore()
@@ -32,6 +33,10 @@ function deleteSubscription() {
   </div>
   <section>
   <CancellationGuide v-if="subscription" :subscription="subscription" />
+  </section>
+
+  <section>
+    <FrictionReportForm v-if="subscription" :subscription="subscription" />
   </section>
 </template>
 
