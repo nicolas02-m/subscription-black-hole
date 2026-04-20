@@ -1,18 +1,13 @@
 <script setup>
+import { PLATFORMS } from '@/utils/platformGuides'
+
 const props = defineProps({
   modelValue: { type: String, default: 'creditCard' }
 })
 
 const emit = defineEmits(['update:modelValue'])
 
-const platforms = [
-  { value: 'creditCard', label: 'Tarjeta de crédito' },
-  { value: 'appleStore', label: 'Apple Store' },
-  { value: 'playStore', label: 'Play Store' },
-  { value: 'paypal', label: 'PayPal' },
-  { value: 'web', label: 'Web' },
-  { value: 'other', label: 'Otros' }
-]
+const platforms = PLATFORMS
 
 function selectPlatform(value) {
   emit('update:modelValue', value)

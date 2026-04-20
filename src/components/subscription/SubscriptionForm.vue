@@ -1,39 +1,103 @@
 <script setup>
-import { reactive } from 'vue'
+import { reactive, watch } from 'vue'
 import PaymentPlaformCard from './PaymentPlaformCard.vue'
 import { CATEGORIES } from '@/utils/constants'
 
-const emit = defineEmits(['submit'])
-
-const form = reactive({
-    name: '',
-    price: '',
-    frequency: 'monthly',
-    category: 'streaming',
-    paymentPlatform: 'creditCard',
-    cancellationLink: '',
+const props = defineProps({
+    initialValues: {
+        type: Object,
+        default: null,
+    },
+    submitLabel: {
+        type: String,
+        default: 'Añadir Suscripción',
+    },
 })
 
-function buildPayload() {
+const emit = defineEmits(['submit'])
+
+function createDefaultForm() {
     return {
-        id: Date.now(),
+        id: null,
+        name: '',
+        price: '',
+        frequency: 'monthly',
+        category: 'streaming',
+        paymentPlatform: 'creditCard',
+        cancellationLink: '',
+        dateofCreation: new Date().toISOString().split('T')[0],
+    }
+}
+
+const form = reactive(createDefaultForm())
+
+function normalizeDateForInput(value) {
+    if (!value) {
+        return createDefaultForm().dateofCreation
+    }
+
+    if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
+        return value
+    }
+
+    const date = new Date(value)
+
+    if (Number.isNaN(date.getTime())) {
+        return createDefaultForm().dateofCreation
+    }
+
+    return date.toISOString().split('T')[0]
+}
+
+function populateForm(values) {
+    const nextValues = {
+        ...createDefaultForm(),
+        ...(values ?? {}),
+    }
+
+    form.id = nextValues.id
+    form.name = nextValues.name
+    form.price = nextValues.price
+    form.frequency = nextValues.frequency
+    form.category = nextValues.category
+    form.paymentPlatform = nextValues.paymentPlatform
+    form.cancellationLink = nextValues.cancellationLink
+    form.dateofCreation = normalizeDateForInput(nextValues.dateofCreation)
+}
+
+watch(() => props.initialValues, (values) => {
+    populateForm(values)
+}, { immediate: true })
+
+function buildPayload() {
+    const payload = {
         name: form.name.trim(),
         price: Number(form.price),
         frequency: form.frequency,
         category: form.category,
         paymentPlatform: form.paymentPlatform,
         cancellationLink: form.cancellationLink.trim(),
-        active: true
+        dateofCreation: form.dateofCreation,
     }
+
+    if (form.id !== null && form.id !== undefined) {
+        payload.id = form.id
+    }
+
+    return payload
+}
+
+function isEditMode() {
+    return props.initialValues !== null
 }
 
 function resetForm() {
-    form.name = ''
-    form.price = ''
-    form.frequency = 'monthly'
-    form.category = 'streaming'
-    form.paymentPlatform = 'creditCard'
-    form.cancellationLink = ''
+    if (isEditMode()) {
+        populateForm(props.initialValues)
+        return
+    }
+
+    populateForm()
 }
 
 function handleSubmit() {
@@ -47,8 +111,17 @@ function handleSubmit() {
         return
     }
 
-    emit('submit', buildPayload())
-    resetForm()
+    const payload = buildPayload()
+
+    if (!payload.id) {
+        payload.id = Date.now()
+    }
+
+    emit('submit', payload)
+
+    if (!isEditMode()) {
+        resetForm()
+    }
 }
 
 function handleReset() {
@@ -56,7 +129,6 @@ function handleReset() {
         resetForm()
     }
 }
-
 </script>
 
 <template>
@@ -95,6 +167,10 @@ function handleReset() {
                     </button>
                 </div>
             </div>
+            <div class="field">
+                <label for="dateofCreation">Fecha de creación:</label>
+                <input id="dateofCreation" type="date" name="dateofCreation" v-model="form.dateofCreation">
+            </div>
         </div>
 
         <div class="optionalSection">
@@ -111,7 +187,7 @@ function handleReset() {
         </div>
         <div class="formActions">
             <button type="button" @click="handleReset">Limpiar Formulario</button>
-            <button class="submitButton" type="submit">Añadir Suscripción</button>
+            <button class="submitButton" type="submit">{{ submitLabel }}</button>
         </div>
     </form>
 </template>
@@ -149,13 +225,12 @@ function handleReset() {
 }
 
 .field input,
-.field select{
+.field select {
     padding: 12px 14px;
     border: 1px solid #ccc;
     border-radius: 10px;
     font: inherit;
 }
-
 
 .cardGroup {
     display: grid;
@@ -220,7 +295,6 @@ function handleReset() {
 }
 
 @media (max-width: 700px) {
-
     .formGrid,
     .cardGroup {
         grid-template-columns: 1fr;

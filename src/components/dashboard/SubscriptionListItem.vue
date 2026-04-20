@@ -14,7 +14,7 @@ const props = defineProps({
         <p>{{ subscription.name }}</p>
         <p>{{ subscription.category }}</p>
         <p>{{ subscription.price }}€</p>
-        <button @click="router.push(`/subscription/${subscription.id}`)">Ver detalles</button>
+        <button @click="router.push(`/subscriptions/${subscription.id}`)">Ver detalles</button>
     </div>
 
 </template>
