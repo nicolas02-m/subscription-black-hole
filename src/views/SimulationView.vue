@@ -1,7 +1,6 @@
 <script setup>
 import { computed } from 'vue'
 import SavingsSummary from '@/components/simulation/SavingsSummary.vue'
-import SavingsComparison from '@/components/simulation/SavingsComparison.vue'
 import SimulationActions from '@/components/simulation/SimaulationActions.vue'
 import SimulationSelector from '@/components/simulation/SimulationSelector.vue'
 import BlackHoleVisualization from '@/components/simulation/BlackHoleVisualization.vue'

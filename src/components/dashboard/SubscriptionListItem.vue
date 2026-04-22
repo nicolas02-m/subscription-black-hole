@@ -1,19 +1,20 @@
 <script setup>
-import router from '@/router';
+import router from '@/router'
+import { formatSubscriptionMonthlyPrice } from '@/utils/formatCurrency'
 
 const props = defineProps({
     subscription: {
         type: Object,
         required: true
     }
-});
+})
 </script>
 
 <template>
     <div class="subscription-item">
         <p>{{ subscription.name }}</p>
         <p>{{ subscription.category }}</p>
-        <p>{{ subscription.price }}€</p>
+        <p>{{ formatSubscriptionMonthlyPrice(subscription) }}</p>
         <button @click="router.push(`/subscriptions/${subscription.id}`)">Ver detalles</button>
     </div>
 
