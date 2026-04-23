@@ -104,6 +104,7 @@ watch(totalMonthlySpending, () => {
 </script>
 
 <template>
+  <section class="planet-visualization">
   <div>
     <h2>Visualización de Planetas</h2>
     <p>Las suscripciones más caras quedan más cerca del agujero negro y los planetas se reparten a ambos lados con pequeñas variaciones verticales.</p>
@@ -112,22 +113,42 @@ watch(totalMonthlySpending, () => {
   <div class="planetas">
     <canvas ref="canvasRef"></canvas>
   </div>
+  </section>
 </template>
 
 <style scoped>
+
+.planet-visualization {
+margin: 150px 0 100px 0;
+}
+
+p{
+  color: var(--text-color);
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  margin: 0px 0px 20px 10px;
+}
+
+h2{
+  color: var(--text-color);
+  font-family: var(--font-heading);
+  font-size: var(--font-size-heading);
+  margin: 0px 0px 30px 30px;
+  }
+
 .planetas {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 580px;
-  border: 1px solid #333;
-  border-radius: 8px;
-  background-color: #0B0F1A;
+  border: 5px solid var(--card-color);
+  border-radius: var(--border-radius);
+  background-color: var(--background-color);
 }
 
 canvas {
   width: 100%;
   height: 100%;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
 }
 </style>

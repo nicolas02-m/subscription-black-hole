@@ -1,0 +1,38 @@
+:root {
+    /* Colors */
+  --primary-color: #F7B36A;
+  --secondary-color: #8B5CF6;
+  --background-color: #0B0F1A;
+  --card-color:#1F2937;
+  --surface-color: #121826;
+  --text-color: #FFFFFF;
+  --sucess-color: #22C55E;
+  --error-color: #EF4444;
+
+  /* Typography */
+  --font-heading: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-size-heading: 1.5em;
+  --font-size-body: 1em;
+/* Spacing */
+  --border-radius: 40px;
+}
+
+
+html {
+  margin: 0px 10px 0px 10px;
+  padding: 0;
+  background-color: var(--background-color);
+  overflow-x: hidden;
+}
+
+h1{
+    font-family: var(--font-heading);
+    color: var(--text-color);
+    font-size: var(--font-size-heading);
+}
+p {
+    font-family: var(--font-body);
+    color: var(--text-color);
+    font-size: var(--font-size-body);
+}

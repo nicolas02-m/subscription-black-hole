@@ -27,12 +27,12 @@ const onCategorySelected = (cat) => {
 </script>
 
 <template>
-    <div class="subscription-list">
+    <section class="subscription-list">
         <div class="header">
             <h2>Subscription List</h2>
             <CategoryFilter :categories="usedCategories" @categorySelected="onCategorySelected" />
         </div>
-        <section class="items">
+        <div class="items">
             <div class="categories">
                 <p>Nombre</p>
                 <p>Categoria</p>
@@ -44,11 +44,19 @@ const onCategorySelected = (cat) => {
                     <SubscriptionListItem :subscription="subscription" />
                 </li>
             </ul>
-        </section>
-    </div>
+        </div>
+    </section>
 </template>
 
 <style scoped>
+
+.header h2 {
+    color: var(--text-color);
+    font-family: var(--font-heading);
+    font-size: var(--font-size-heading);
+    margin: 0px 0px 30px 10px;
+}
+
 .header {
     display: flex;
     justify-content: space-between;
@@ -58,6 +66,8 @@ const onCategorySelected = (cat) => {
 .categories {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
+    color: var(--text-color);
+    font-family: var(--font-body);
     font-weight: 600;
     font-size: larger;
     padding: 10px;
@@ -71,13 +81,13 @@ ul {
 .items {
     display: flex;
     flex-direction: column;
-    border: 1px solid black;
-    border-radius: 8px;
-    padding: 10px;
+    border: 5px solid var(--card-color);
+    border-radius: var(--border-radius);
+    padding: 20px;
 }
 
 li {
     list-style: none;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 </style>

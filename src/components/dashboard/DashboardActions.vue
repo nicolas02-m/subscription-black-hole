@@ -12,21 +12,27 @@ import router from '@/router';
 
 .actions {
     display: flex;
-    justify-content: space-evenly;
+    margin-top: 150px;
+    width: 100%;
+    gap: 20px;
 
 }
 button {
-    padding: 30px;
-    background-color: black;
-    color: white;
+    padding: 20px 40px;
+    width: 100%;
+    background-color: var(--primary-color);
+    font-family: var(--font-heading);
+    color: var(--surface-color);
     border: none;
-    border-radius: 8px;
-    font-size: 16px;
+    border-radius: 20px;
+    font-size: 1.5em;
     cursor: pointer;
 }
 
 button:hover {
-    background-color: #333; 
+translate: 0px -10px;
+transition: translate 0.2s ease-in-out;
+
 }
 
 button:active {

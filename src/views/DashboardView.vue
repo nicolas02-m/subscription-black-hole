@@ -16,5 +16,9 @@ import PlanetVisualisation from '@/components/dashboard/PlanetVisualisation.vue'
 </template>
 
 <style scoped>
-
+h1 {
+    font-size: 2rem;
+    margin: 2em;
+    text-align: center;
+}
 </style>

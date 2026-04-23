@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted } from 'vue';
 import { useSubscriptionStore } from '@/stores/subscription'
+import AppHeader from '@/components/layout/AppHeader.vue'
 
 const store = useSubscriptionStore();
 
@@ -11,16 +12,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="app">
-    <nav>
-      <ul>
-        <li><router-link to="/">Dashboard</router-link></li>
-        <li><router-link to="/add">Añadir Suscripción</router-link></li>
-        <li><router-link to="/simulation">Simulación</router-link></li>
-      </ul>
-    </nav>
-    <router-view />
-  </div>
+  <AppHeader />
+
+<main>
+  <router-view />
+  </main>
 </template>
 
 <style scoped></style>

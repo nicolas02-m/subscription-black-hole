@@ -31,24 +31,6 @@ function createDefaultForm() {
 
 const form = reactive(createDefaultForm())
 
-function normalizeDateForInput(value) {
-    if (!value) {
-        return createDefaultForm().dateofCreation
-    }
-
-    if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
-        return value
-    }
-
-    const date = new Date(value)
-
-    if (Number.isNaN(date.getTime())) {
-        return createDefaultForm().dateofCreation
-    }
-
-    return date.toISOString().split('T')[0]
-}
-
 function populateForm(values) {
     const nextValues = {
         ...createDefaultForm(),
@@ -62,7 +44,7 @@ function populateForm(values) {
     form.category = nextValues.category
     form.paymentPlatform = nextValues.paymentPlatform
     form.cancellationLink = nextValues.cancellationLink
-    form.dateofCreation = normalizeDateForInput(nextValues.dateofCreation)
+    form.dateofCreation = nextValues.dateofCreation
 }
 
 watch(() => props.initialValues, (values) => {
@@ -186,7 +168,7 @@ function handleReset() {
             </div>
         </div>
         <div class="formActions">
-            <button type="button" @click="handleReset">Limpiar Formulario</button>
+            <button class="clearButton" type="button" @click="handleReset">Limpiar Formulario</button>
             <button class="submitButton" type="submit">{{ submitLabel }}</button>
         </div>
     </form>
@@ -196,16 +178,23 @@ function handleReset() {
 .subscriptionForm {
     display: flex;
     flex-direction: column;
+    color: var(--text-color);
+    font-family: var(--font-body);
     gap: 22px;
     padding: 24px;
-    border: 1px solid #ddd;
-    border-radius: 16px;
-    background: #fff;
+    border: 5px solid var(--card-color);
+    border-radius: var(--border-radius);
+    background: var(--surface-color);
+    margin-top: 40px;
 }
 
 .optionalSection {
-    border-top: 1px solid black;
+    border-top: 5px solid var(--card-color);
     padding-top: 20px;
+}
+
+.optionalSection .field {
+    margin: 30px 0;
 }
 
 .formGrid {
@@ -220,6 +209,11 @@ function handleReset() {
     gap: 8px;
 }
 
+input:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
 .field label {
     font-weight: 600;
 }
@@ -227,8 +221,8 @@ function handleReset() {
 .field input,
 .field select {
     padding: 12px 14px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
+    border: 5px solid var(--card-color);
+    border-radius: var(--border-radius);
     font: inherit;
 }
 
@@ -245,24 +239,25 @@ function handleReset() {
 .card {
     display: flex;
     flex-direction: column;
+color: var(--text-color);
     gap: 4px;
     padding: 16px;
-    border: 2px solid #d8d8d8;
-    border-radius: 14px;
-    background: #fff;
+    border: 5px solid var(--card-color);
+    border-radius: var(--border-radius);
+    background: var(--surface-color);
     text-align: left;
     cursor: pointer;
     transition: transform 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
 }
 
 .card:hover {
-    border-color: #999;
+    border-color: var(--primary-color);
 }
 
 .card.active {
     transform: scale(1.02);
-    border-color: #111;
-    background-color: #f3f3f3;
+    background-color: var(--primary-color);
+    color: var(--surface-color);
 }
 
 .cardTitle {
@@ -273,25 +268,45 @@ function handleReset() {
     display: flex;
     justify-content: flex-end;
     margin-top: 4px;
+    gap: 10px;
 }
 
 .submitButton {
     padding: 12px 18px;
     border: none;
-    border-radius: 10px;
-    background: #111;
-    color: #fff;
+    border-radius: var(--border-radius);
+    background: var(--primary-color);
+    color: var(--surface-color);
     font: inherit;
     cursor: pointer;
-    transition: opacity 0.18s ease, transform 0.18s ease;
+    transition: transform 0.2s ease, translate 0.2s ease;
 }
 
 .submitButton:hover {
-    opacity: 0.92;
+    opacity: 0.9;
+    transform: scale(1.02);
+    translate: 0 -10px;
 }
 
 .submitButton:active {
     transform: scale(0.98);
+}
+
+.clearButton {
+    padding: 12px 18px;
+    border: none;
+    border-radius: var(--border-radius);
+    background: transparent;
+    color: var(--primary-color);
+    font: inherit;
+    cursor: pointer;
+    transition: transform 0.2s ease, translate 0.2s ease, color 0.2s ease;
+}
+
+.clearButton:hover {
+    color: var(--secondary-color);
+    transform: scale(1.02);
+    translate: 0 -10px;
 }
 
 @media (max-width: 700px) {

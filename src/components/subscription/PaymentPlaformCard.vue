@@ -34,29 +34,30 @@ function selectPlatform(value) {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 12px;
+    margin: 10px 0px;
 }
 
 .cardPaymentPlatform {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+   
     padding: 16px;
-    border: 2px solid #d8d8d8;
+    border: 5px solid var(--card-color);
     border-radius: 14px;
-    background: #fff;
+    background: var(--surface-color);
+    color: var(--text-color);
     text-align: left;
     cursor: pointer;
     transition: transform 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
 }
 
 .cardPaymentPlatform:hover {
-    border-color: #999;
+    border-color: var(--primary-color);
 }
 
 .cardPaymentPlatform.active {
     transform: scale(1.02);
     border-color: #111;
-    background-color: #f3f3f3;
+    color: var(--surface-color);
+    background-color: var(--primary-color);
 }
 
 .cardTitle {
