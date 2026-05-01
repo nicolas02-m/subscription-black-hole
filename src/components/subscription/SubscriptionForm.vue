@@ -239,7 +239,7 @@ input:focus {
 .card {
     display: flex;
     flex-direction: column;
-color: var(--text-color);
+    color: var(--text-color);
     gap: 4px;
     padding: 16px;
     border: 5px solid var(--card-color);
@@ -310,6 +310,7 @@ color: var(--text-color);
 }
 
 @media (max-width: 700px) {
+
     .formGrid,
     .cardGroup {
         grid-template-columns: 1fr;

@@ -20,18 +20,22 @@ setTimeout(() => {
 <template>
   <div class="add-subscription-view">
   <header>
+    <div class="add-sub-title">
     <h1>Añadir Suscripción</h1>
     <p>Introduce los datos de la suscripción para poder visualizar su impacto y gestionarla</p>
-  </header>
-
-  <p v-if="successMessage" class="success-message">
+  </div>
+  <Calert v-if="successMessage" class="success-message">
       {{ successMessage }}
-    </p>
+  </Calert>
+  </header>
+ 
+  
 <section>
   <SubscriptionForm 
     @submit="handleSubmit"
   />
   </section>
+ 
   </div>
 </template>
 
@@ -39,16 +43,18 @@ setTimeout(() => {
 
 .add-subscription-view {
  display: grid;
- grid-template-columns: 1fr 4fr;
- height: 100%;
+ grid-template-columns: 1.5fr 4fr;
 }
 .success-message {
-  margin-bottom: 20px;
-  padding: 12px 16px;
-  border: 1px solid var(--success-color);
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  font-size: 16px;
+  border: 5px solid var(--sucess-color);
   border-radius: var(--border-radius);
-  background-color: var(--surface-color);
-  color: var(--success-color);
+  background-color: var(--sucess-color);
+  color: var(--text-color);
+  font-family: var(--font-body);
 }
 header h1 {
     color: var(--text-color);
@@ -65,6 +71,9 @@ header p {
 }
 
 header {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
     margin: 60px 0 0 0;
     padding: 10px;
 }

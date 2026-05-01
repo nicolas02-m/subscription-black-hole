@@ -7,15 +7,13 @@ import { formatCurrency } from '@/utils/formatCurrency'
 const store = useSubscriptionStore()
 const { planets } = usePlanets()
 const canvasRef = ref(null)
+const hoveredPlanetId = ref(null)
 
 const totalMonthlySpending = computed(() => {
   return store.monthlyTotal
 })
 
-function drawVisualization(ctx, width, height) {
-  ctx.fillStyle = '#0B0F1A'
-  ctx.fillRect(0, 0, width, height)
-
+function getSceneLayout(width, height) {
   const centerX = width / 2
   const centerY = height / 2
   const blackHoleRadius = 100
@@ -24,6 +22,68 @@ function drawVisualization(ctx, width, height) {
   const leftMinPlanetX = 90
   const leftMaxPlanetX = centerX - blackHoleRadius - 90
   const verticalSpread = height * 0.24
+  const rightRange = Math.max(0, rightMaxPlanetX - rightMinPlanetX)
+  const leftRange = Math.max(0, leftMaxPlanetX - leftMinPlanetX)
+
+  return {
+    centerX,
+    centerY,
+    blackHoleRadius,
+    rightMinPlanetX,
+    leftMaxPlanetX,
+    verticalSpread,
+    rightRange,
+    leftRange
+  }
+}
+
+function getPlanetPosition(planet, layout) {
+  const x = planet.side === 'left'
+    ? layout.leftMaxPlanetX - planet.distanceXNormalized * layout.leftRange
+    : layout.rightMinPlanetX + planet.distanceXNormalized * layout.rightRange
+
+  return {
+    x,
+    y: layout.centerY + planet.yOffsetNormalized * layout.verticalSpread,
+    radius: 15 + planet.radiusNormalized * 60
+  }
+}
+
+function drawPlanet(ctx, planet, position, isHovered = false) {
+  const radius = isHovered ? position.radius + 8 : position.radius
+
+  ctx.shadowColor = isHovered ? 'rgba(255, 215, 0, 0.65)' : 'rgba(0, 0, 0, 0)'
+  ctx.shadowBlur = isHovered ? 24 : 0
+  ctx.shadowOffsetX = 0
+  ctx.shadowOffsetY = 0
+
+  ctx.fillStyle = planet.color
+  ctx.beginPath()
+  ctx.arc(position.x, position.y, radius, 0, Math.PI * 2)
+  ctx.fill()
+
+  ctx.shadowColor = 'rgba(0, 0, 0, 0)'
+  ctx.shadowBlur = 0
+
+  ctx.strokeStyle = isHovered ? '#FFD700' : 'rgba(255, 255, 255, 0.45)'
+  ctx.lineWidth = isHovered ? 4 : 2
+  ctx.stroke()
+
+  ctx.fillStyle = 'white'
+  ctx.font = isHovered ? 'bold 13px Space Grotesk' : 'bold 12px Space Grotesk'
+  ctx.textAlign = 'center'
+  ctx.fillText(planet.name, position.x, position.y - radius - 10)
+
+  ctx.fillStyle = '#FFD700'
+  ctx.font = isHovered ? '13px Space Grotesk' : '12px Space Grotesk'
+  ctx.fillText(`${formatCurrency(planet.monthlyPrice)}/mes`, position.x, position.y + radius + 16)
+}
+
+function drawVisualization(ctx, width, height) {
+  ctx.fillStyle = '#0B0F1A'
+  ctx.fillRect(0, 0, width, height)
+
+  const layout = getSceneLayout(width, height)
 
   ctx.shadowColor = '#f7b36a'
   ctx.shadowBlur = 55
@@ -32,7 +92,7 @@ function drawVisualization(ctx, width, height) {
 
   ctx.fillStyle = 'black'
   ctx.beginPath()
-  ctx.arc(centerX, centerY, blackHoleRadius, 0, Math.PI * 2)
+  ctx.arc(layout.centerX, layout.centerY, layout.blackHoleRadius, 0, Math.PI * 2)
   ctx.fill()
 
   ctx.shadowColor = 'rgba(0, 0, 0, 0)'
@@ -40,40 +100,26 @@ function drawVisualization(ctx, width, height) {
 
   ctx.fillStyle = 'white'
   ctx.textAlign = 'center'
-  ctx.font = '700 11px Arial'
-  ctx.fillText('Total / mes', centerX, centerY - 6)
-  ctx.font = '700 12px Arial'
-  ctx.fillText(formatCurrency(totalMonthlySpending.value), centerX, centerY + 12)
+  ctx.font = '700 14px Space Grotesk'
+  ctx.fillText('Total / mes', layout.centerX, layout.centerY - 6)
+  ctx.font = '700 16px Space Grotesk'
+  ctx.fillText(formatCurrency(totalMonthlySpending.value), layout.centerX, layout.centerY + 12)
 
-  planets.value.forEach((planet) => {
-    const rightRange = Math.max(0, rightMaxPlanetX - rightMinPlanetX)
-    const leftRange = Math.max(0, leftMaxPlanetX - leftMinPlanetX)
+  const planetPositions = planets.value.map((planet) => ({
+    planet,
+    position: getPlanetPosition(planet, layout)
+  }))
+  const hoveredPlanet = planetPositions.find(({ planet }) => planet.id === hoveredPlanetId.value)
 
-    const x = planet.side === 'left'
-      ? leftMaxPlanetX - planet.distanceXNormalized * leftRange
-      : rightMinPlanetX + planet.distanceXNormalized * rightRange
-
-    const y = centerY + planet.yOffsetNormalized * verticalSpread
-    const radius = 18 + planet.radiusNormalized * 30
-
-    ctx.fillStyle = planet.color
-    ctx.beginPath()
-    ctx.arc(x, y, radius, 0, Math.PI * 2)
-    ctx.fill()
-
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)'
-    ctx.lineWidth = 2
-    ctx.stroke()
-
-    ctx.fillStyle = 'white'
-    ctx.font = 'bold 12px Arial'
-    ctx.textAlign = 'center'
-    ctx.fillText(planet.name, x, y - radius - 10)
-
-    ctx.fillStyle = '#FFD700'
-    ctx.font = '11px Arial'
-    ctx.fillText(`${formatCurrency(planet.monthlyPrice)}/mes`, x, y + radius + 16)
+  planetPositions.forEach(({ planet, position }) => {
+    if (planet.id !== hoveredPlanetId.value) {
+      drawPlanet(ctx, planet, position)
+    }
   })
+
+  if (hoveredPlanet) {
+    drawPlanet(ctx, hoveredPlanet.planet, hoveredPlanet.position, true)
+  }
 }
 
 function render() {
@@ -88,6 +134,41 @@ function render() {
   canvas.height = height
 
   drawVisualization(ctx, width, height)
+}
+
+function getHoveredPlanetId(event) {
+  if (!canvasRef.value) return null
+
+  const canvas = canvasRef.value
+  const rect = canvas.getBoundingClientRect()
+  const mouseX = event.clientX - rect.left
+  const mouseY = event.clientY - rect.top
+  const layout = getSceneLayout(canvas.offsetWidth, canvas.offsetHeight)
+
+  return [...planets.value].reverse().find((planet) => {
+    const { x, y, radius } = getPlanetPosition(planet, layout)
+    const distance = Math.hypot(mouseX - x, mouseY - y)
+
+    return distance <= radius
+  })?.id || null
+}
+
+function handleMouseMove(event) {
+  const nextHoveredPlanetId = getHoveredPlanetId(event)
+
+  if (hoveredPlanetId.value === nextHoveredPlanetId) return
+
+  hoveredPlanetId.value = nextHoveredPlanetId
+  canvasRef.value.style.cursor = nextHoveredPlanetId ? 'pointer' : 'default'
+  render()
+}
+
+function handleMouseLeave() {
+  if (!hoveredPlanetId.value) return
+
+  hoveredPlanetId.value = null
+  canvasRef.value.style.cursor = 'default'
+  render()
 }
 
 onMounted(() => {
@@ -111,7 +192,11 @@ watch(totalMonthlySpending, () => {
   </div>
 
   <div class="planetas">
-    <canvas ref="canvasRef"></canvas>
+    <canvas
+      ref="canvasRef"
+      @mousemove="handleMouseMove"
+      @mouseleave="handleMouseLeave"
+    ></canvas>
   </div>
   </section>
 </template>
