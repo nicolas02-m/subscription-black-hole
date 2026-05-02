@@ -25,9 +25,11 @@ function deleteSubscription() {
 
 <template>
   <div>
-    <h1>Subscription Detail</h1>
-    <button @click="$router.push(`/subscriptions/${subscription.id}/edit`)">Editar</button>
-    <button @click="deleteSubscription" style="background-color: red; color: white;">Eliminar</button>
+    <h1>Detalle de la suscripción</h1>
+    <section class="main-buttons">
+    <button id="edit" @click="$router.push(`/subscriptions/${subscription.id}/edit`)">Editar</button>
+    <button id="delete" @click="deleteSubscription">Eliminar</button>
+    </section>
     <SubscriptionStats v-if="subscription" :subscription="subscription" />
     <p v-else>Subscription not found.</p>
   </div>
@@ -41,5 +43,52 @@ function deleteSubscription() {
 </template>
 
 <style scoped>
+h1{
+text-align: center;
+padding: 40px;
+}
+
+.main-buttons{
+display: flex;
+justify-content: space-evenly;
+}
+
+#edit{
+  background-color: var(--background-color);
+  border: 3px solid var(--primary-color);
+  color: var(--text-color)
+}
+
+#edit:hover{
+  background-color: var(--primary-color);
+  color: var(--background-color);
+}
+
+#delete{
+  background-color: var(--background-color);
+  border: 3px solid var(--error-color);
+  color: var(--text-color)
+}
+
+#delete:hover{
+  background-color: var(--error-color);
+  color: var(--background-color);
+}
+
+.main-buttons > button{
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  font-weight: 600;
+padding: 30px;
+width: 20%;
+border-radius: var(--border-radius);
+border: 0;
+}
+
+.main-buttons > button:hover{
+cursor: pointer;
+translate: 0 -10px;
+transition: translate 0.3s ease, background-color 0.3s ease;;
+}
 
 </style>

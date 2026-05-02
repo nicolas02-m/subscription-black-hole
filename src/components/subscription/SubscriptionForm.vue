@@ -284,8 +284,10 @@ input:focus {
 
 .submitButton:hover {
     opacity: 0.9;
-    transform: scale(1.02);
+    transform: scale(1.1);
     translate: 0 -10px;
+    background-color: var(--secondary-color);
+    transition: translate 0.3s ease, transform 0.4s ease, background-color 0.3s ease;
 }
 
 .submitButton:active {
@@ -300,12 +302,12 @@ input:focus {
     color: var(--primary-color);
     font: inherit;
     cursor: pointer;
-    transition: transform 0.2s ease, translate 0.2s ease, color 0.2s ease;
+    transition: transform 0.4s ease, translate 0.3s ease, color 0.3s ease;
 }
 
 .clearButton:hover {
     color: var(--secondary-color);
-    transform: scale(1.02);
+    transform: scale(1.1);
     translate: 0 -10px;
 }
 

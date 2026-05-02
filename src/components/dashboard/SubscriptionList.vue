@@ -51,8 +51,6 @@ const onCategorySelected = (cat) => {
 <style scoped>
 
 .header h2 {
-    color: var(--text-color);
-    font-family: var(--font-heading);
     font-size: var(--font-size-heading);
     margin: 0px 0px 30px 10px;
 }

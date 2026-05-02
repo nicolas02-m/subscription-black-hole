@@ -31,8 +31,8 @@ button {
 
 button:hover {
 translate: 0px -10px;
-transition: translate 0.2s ease-in-out;
-
+transition: translate 0.3s ease-in-out, background-color 0.5s ease;
+background-color: var(--secondary-color);
 }
 
 button:active {

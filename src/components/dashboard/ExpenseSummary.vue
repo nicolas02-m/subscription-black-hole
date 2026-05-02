@@ -15,8 +15,6 @@ const store = useSubscriptionStore();
 <style scoped>
 
 h2 {
-    color: var(--text-color);
-    font-family: var(--font-body);
     font-weight: 600;
     font-size: var(--font-size-heading);
     margin: 0px 0px 30px 30px;

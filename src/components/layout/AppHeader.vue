@@ -50,9 +50,14 @@ nav ul li a {
 }
 
 li:hover {
-    transform: scale(1.02);
     translate: 0 -10px;
-    transition: color 0.2s ease, transform 0.2s ease, translate 0.2s ease;
+    transform: scale(1.2);
+    transition: transform 0.4s ease, translate 0.2s ease;
+}
+
+a:hover{
+  transition: color 0.2s ease; 
+  color: var(--secondary-color);
 }
 
 </style>

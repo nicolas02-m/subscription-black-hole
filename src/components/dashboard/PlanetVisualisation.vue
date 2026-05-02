@@ -52,7 +52,7 @@ function getPlanetPosition(planet, layout) {
 function drawPlanet(ctx, planet, position, isHovered = false) {
   const radius = isHovered ? position.radius + 8 : position.radius
 
-  ctx.shadowColor = isHovered ? 'rgba(255, 215, 0, 0.65)' : 'rgba(0, 0, 0, 0)'
+  ctx.shadowColor = isHovered ? '#F7B36A' : 'rgba(0, 0, 0, 0)'
   ctx.shadowBlur = isHovered ? 24 : 0
   ctx.shadowOffsetX = 0
   ctx.shadowOffsetY = 0
@@ -62,10 +62,8 @@ function drawPlanet(ctx, planet, position, isHovered = false) {
   ctx.arc(position.x, position.y, radius, 0, Math.PI * 2)
   ctx.fill()
 
-  ctx.shadowColor = 'rgba(0, 0, 0, 0)'
-  ctx.shadowBlur = 0
 
-  ctx.strokeStyle = isHovered ? '#FFD700' : 'rgba(255, 255, 255, 0.45)'
+  ctx.strokeStyle = isHovered ? '#F7B36A' : 'rgba(255, 255, 255, 0.45)'
   ctx.lineWidth = isHovered ? 4 : 2
   ctx.stroke()
 
@@ -215,8 +213,6 @@ p{
 }
 
 h2{
-  color: var(--text-color);
-  font-family: var(--font-heading);
   font-size: var(--font-size-heading);
   margin: 0px 0px 30px 30px;
   }

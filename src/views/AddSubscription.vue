@@ -9,11 +9,11 @@ const successMessage = ref('')
 function handleSubmit(data) {
   store.addSubscription(data)
   successMessage.value = 'Suscripción añadida con éxito'
-}
 
-setTimeout(() => {
-  successMessage.value = ''
-}, 2000)
+  setTimeout(() => {
+    successMessage.value = ''
+  }, 2000)
+}
 
 </script>
 
@@ -24,9 +24,6 @@ setTimeout(() => {
     <h1>Añadir Suscripción</h1>
     <p>Introduce los datos de la suscripción para poder visualizar su impacto y gestionarla</p>
   </div>
-  <Calert v-if="successMessage" class="success-message">
-      {{ successMessage }}
-  </Calert>
   </header>
  
   
@@ -35,6 +32,10 @@ setTimeout(() => {
     @submit="handleSubmit"
   />
   </section>
+
+  <div v-if="successMessage" class="success-popup" role="status" aria-live="polite">
+      {{ successMessage }}
+  </div>
  
   </div>
 </template>
@@ -45,22 +46,46 @@ setTimeout(() => {
  display: grid;
  grid-template-columns: 1.5fr 4fr;
 }
-.success-message {
-  display: flex;
-  justify-content: center;
-  padding: 10px;
-  font-size: 16px;
-  border: 5px solid var(--sucess-color);
-  border-radius: var(--border-radius);
-  background-color: var(--sucess-color);
+.success-popup {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 20;
+  max-width: min(320px, calc(100vw - 48px));
+  padding: 18px 22px;
+  border: 2px solid var(--sucess-color);
+  border-radius: 18px;
+  background-color: var(--surface-color);
   color: var(--text-color);
   font-family: var(--font-body);
+  font-weight: 600;
+  box-shadow: 0 0 18px rgba(34, 197, 94, 0.25);
+  animation: popup-in 0.25s ease;
+}
+
+.success-popup::before {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 10px;
+  border-radius: 50%;
+  background-color: var(--sucess-color);
+}
+
+@keyframes popup-in {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 header h1 {
-    color: var(--text-color);
-    font-family: var(--font-body);
     font-weight: 600;
-    font-size: var(--font-size-heading);
     margin: 0px 0px 10px 30px;
 }
 
@@ -87,6 +112,13 @@ header {
   header {
     text-align: center;
     margin: 40px 0;
+  }
+
+  .success-popup {
+    top: 16px;
+    right: 16px;
+    left: 16px;
+    max-width: none;
   }
   
 }

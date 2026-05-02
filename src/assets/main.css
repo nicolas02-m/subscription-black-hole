@@ -1,20 +1,23 @@
 :root {
     /* Colors */
   --primary-color: #F7B36A;
-  --secondary-color: #8B5CF6;
+  --secondary-color: #55e9f7;
   --background-color: #0B0F1A;
   --card-color:#1F2937;
   --surface-color: #121826;
   --text-color: #FFFFFF;
   --sucess-color: #22C55E;
   --error-color: #EF4444;
+  
 
   /* Typography */
   --font-heading: "Space Grotesk", sans-serif;
   --font-body: "Inter", sans-serif;
   --font-size-heading: 1.5em;
+  --font-size-subheading: 1.3em;
   --font-size-body: 1em;
-/* Spacing */
+  
+  /* Border radius */
   --border-radius: 40px;
 }
 
@@ -28,8 +31,20 @@ html {
 
 h1{
     font-family: var(--font-heading);
-    color: var(--text-color);
+    color: var(--primary-color);
     font-size: var(--font-size-heading);
+}
+
+h2{
+font-family: var(--font-heading);
+color: var(--secondary-color);
+font-size: var(--font-size-subheading)
+
+}
+
+h3{
+font-family: var(--font-heading);
+color: var(--text-color);
 }
 p {
     font-family: var(--font-body);

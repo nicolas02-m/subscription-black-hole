@@ -28,14 +28,13 @@ color: var(--text-color);
 }
 
 select {
-    padding: 8px;
     font-size: var(--font-size-body);
     font-family: var(--font-body);
     border: 5px solid var(--card-color);
     border-radius: var(--border-radius);
     background-color: var(--background-color);
-    color: var(--primary-color);
-    padding: 20px;
+    color: var(--text-color);
+    padding: 15px;
 }
 .categoryFilter {
     display: flex;
