@@ -40,4 +40,11 @@ button:active {
     transform: scale(0.95);
 }
 
+@media (max-width: 950px) {
+    .actions {
+        flex-direction: column;
+        gap: 50px;
+    }
+}
+
 </style>

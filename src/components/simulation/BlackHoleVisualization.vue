@@ -39,7 +39,7 @@ const remainingMonthlyCost = computed(() => {
 
 function drawAmountBlock(ctx, x, label, value) {
   ctx.textAlign = 'center'
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.78)'
+  ctx.fillStyle = 'white'
   ctx.font = '600 16px Arial'
   ctx.fillText(label, x, 78)
 
@@ -56,8 +56,8 @@ function drawBlackHole(ctx, width, height, savingsPercentage, currentCost, remai
   const quarter = Math.min(width, height) / 4
   const baseRadius = Math.min(width, height) * 0.2
 
-  drawAmountBlock(ctx, quarter, 'Total spending', currentCost)
-  drawAmountBlock(ctx, quarter * 3, 'After deleting selected', remainingCost)
+  drawAmountBlock(ctx, quarter, 'Total:', currentCost)
+  drawAmountBlock(ctx, quarter * 3, 'Gasto con ahorro:', remainingCost)
 
   ctx.shadowColor = '#f7b36a'
   ctx.shadowBlur = 40
@@ -69,13 +69,10 @@ function drawBlackHole(ctx, width, height, savingsPercentage, currentCost, remai
   ctx.arc(quarter, centerY, baseRadius, 0, Math.PI * 2)
   ctx.fill()
 
-  ctx.shadowColor = 'rgba(0, 0, 0, 0)'
-  ctx.shadowBlur = 0
-
   const minRadius = baseRadius * 0.15
   const savingsRadius = Math.max(minRadius, baseRadius * (1 - savingsPercentage / 100))
 
-  ctx.shadowColor = '#22C55E'
+  ctx.shadowColor = '#55e9f7'
   ctx.shadowBlur = 30
   ctx.shadowOffsetX = 0
   ctx.shadowOffsetY = 0
@@ -92,9 +89,6 @@ function drawBlackHole(ctx, width, height, savingsPercentage, currentCost, remai
   ctx.font = 'bold 24px Arial'
   ctx.textAlign = 'center'
   ctx.fillText(`${savingsPercentage.toFixed(1)}% ahorrado`, width / 2, height - 40)
-  ctx.font = 'bold 18px Arial'
-  ctx.fillText('Total', quarter, centerY + baseRadius + 50)
-  ctx.fillText('Gasto con ahorro', quarter * 3, centerY + baseRadius + 50)
 }
 
 function renderBlackHole() {
@@ -128,16 +122,7 @@ watch(activeSimulation, () => {
 <template>
   <div class="black-hole-container">
     <h2>Visualización de ahorro</h2>
-    <canvas
-      ref="canvasRef"
-      width="700"
-      height="700"
-      class="black-hole-canvas"
-    ></canvas>
-    <p class="legend">
-      <span class="circle gray"></span> Total |
-      <span class="circle black"></span> Ahorrado
-    </p>
+    <canvas ref="canvasRef" width="700" height="700" class="black-hole-canvas"></canvas>
   </div>
 </template>
 
@@ -146,45 +131,21 @@ watch(activeSimulation, () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  background-color: #f9f9f9;
+  gap: 20px;
+  padding: 28px;
+  border: 5px solid var(--card-color);
+  border-radius: var(--border-radius);
+  background-color: var(--surface-color);
+}
+
+.black-hole-container h2 {
+  margin: 0;
 }
 
 .black-hole-canvas {
   width: 100%;
   max-width: 700px;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  background-color: #ffffff;
-}
-
-h2 {
-  margin: 0;
-}
-
-.legend {
-  font-size: 12px;
-  color: #666;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.circle {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-}
-
-.circle.gray {
-  background-color: #cccccc;
-}
-
-.circle.black {
-  background-color: #000000;
+  border: 2px solid var(--primary-color);
+  border-radius: var(--border-radius);
 }
 </style>

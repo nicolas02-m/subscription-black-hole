@@ -150,6 +150,7 @@ width: 100%;
 
 .title-friction {
   text-align: center;
+  padding: 0px 0px 40px 00px;
 }
 
 .checkbox-friction{

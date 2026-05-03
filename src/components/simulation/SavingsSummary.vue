@@ -42,5 +42,49 @@ const annualSavings = computed(() => {
 </template>
 
 <style scoped>
+.savings-summary {
+  background-color: var(--surface-color);
+  border: 5px solid var(--card-color);
+  border-radius: var(--border-radius);
+  padding: 20px;
+  text-align: center;
+}
 
+.savings-grid {
+  display: flex;
+  justify-content: space-around;
+  gap: 40px;
+  margin-top: 20px;
+  padding: 20px;
+}
+
+.savings-card {
+  background-color: var(--surface-color);
+  border: 3px solid var(--primary-color);
+  border-radius: var(--border-radius);
+  padding: 20px;
+  width: 30%;
+  font-family: var(--font-body); 
+}
+
+.savings-card p {
+  font-size: var(--font-size-subheading);
+  padding: 10px 0;
+  margin: 0;
+}
+
+.amount {
+  display: block;
+  font-size: var(--font-size-heading);
+  font-weight: bold;
+  color: var(--primary-color);
+  margin-top: 10px;
+}
+
+.empty-state {
+  margin-top: 20px;
+  font-style: italic;
+  color: var(--text-color);
+  font-size: var(--font-size-body);
+}
 </style>
