@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useSubscriptionStore } from '@/stores/subscription'
 import { usePlanets } from '@/composables/usePlanets'
 import { formatCurrency } from '@/utils/formatCurrency'
@@ -8,6 +8,7 @@ const store = useSubscriptionStore()
 const { planets } = usePlanets()
 const canvasRef = ref(null)
 const hoveredPlanetId = ref(null)
+let resizeObserver = null
 
 const totalMonthlySpending = computed(() => {
   return store.monthlyTotal
@@ -16,18 +17,27 @@ const totalMonthlySpending = computed(() => {
 function getSceneLayout(width, height) {
   const centerX = width / 2
   const centerY = height / 2
-  const blackHoleRadius = 100
-  const rightMinPlanetX = centerX + blackHoleRadius + 90
-  const rightMaxPlanetX = width - 90
-  const leftMinPlanetX = 90
-  const leftMaxPlanetX = centerX - blackHoleRadius - 90
-  const verticalSpread = height * 0.24
+  const minSize = Math.min(width, height)
+  const isCompact = width < 680
+  const sceneScale = Math.min(1, Math.max(0.55, minSize / 700))
+  const blackHoleRadius = Math.min(100, Math.max(52, minSize * 0.15))
+  const planetGap = Math.max(32, 90 * sceneScale)
+  const planetMargin = Math.max(34, 90 * sceneScale)
+  const rightMinPlanetX = centerX + blackHoleRadius + planetGap
+  const rightMaxPlanetX = width - planetMargin
+  const leftMinPlanetX = planetMargin
+  const leftMaxPlanetX = centerX - blackHoleRadius - planetGap
+  const verticalSpread = height * (isCompact ? 0.34 : 0.24)
   const rightRange = Math.max(0, rightMaxPlanetX - rightMinPlanetX)
   const leftRange = Math.max(0, leftMaxPlanetX - leftMinPlanetX)
 
   return {
     centerX,
     centerY,
+    width,
+    height,
+    sceneScale,
+    isCompact,
     blackHoleRadius,
     rightMinPlanetX,
     leftMaxPlanetX,
@@ -37,7 +47,23 @@ function getSceneLayout(width, height) {
   }
 }
 
-function getPlanetPosition(planet, layout) {
+function getPlanetPosition(planet, layout, index = 0, total = 1) {
+  const radius = Math.max(9, (10 + planet.radiusNormalized * 48) * layout.sceneScale)
+
+  if (layout.isCompact) {
+    const angleStep = (Math.PI * 2) / Math.max(total, 1)
+    const angle = -Math.PI / 2 + index * angleStep
+    const orbitFactor = 0.78 + planet.distanceXNormalized * 0.22
+    const orbitX = Math.max(90, (layout.width / 2 - radius - 28) * orbitFactor)
+    const orbitY = Math.max(120, (layout.height / 2 - radius - 42) * orbitFactor)
+
+    return {
+      x: layout.centerX + Math.cos(angle) * orbitX,
+      y: layout.centerY + Math.sin(angle) * orbitY,
+      radius
+    }
+  }
+
   const x = planet.side === 'left'
     ? layout.leftMaxPlanetX - planet.distanceXNormalized * layout.leftRange
     : layout.rightMinPlanetX + planet.distanceXNormalized * layout.rightRange
@@ -45,12 +71,12 @@ function getPlanetPosition(planet, layout) {
   return {
     x,
     y: layout.centerY + planet.yOffsetNormalized * layout.verticalSpread,
-    radius: 15 + planet.radiusNormalized * 60
+    radius
   }
 }
 
 function drawPlanet(ctx, planet, position, isHovered = false) {
-  const radius = isHovered ? position.radius + 8 : position.radius
+  const radius = isHovered ? position.radius + Math.max(5, position.radius * 0.14) : position.radius
 
   ctx.shadowColor = isHovered ? '#F7B36A' : 'rgba(0, 0, 0, 0)'
   ctx.shadowBlur = isHovered ? 24 : 0
@@ -68,12 +94,13 @@ function drawPlanet(ctx, planet, position, isHovered = false) {
   ctx.stroke()
 
   ctx.fillStyle = 'white'
-  ctx.font = isHovered ? 'bold 13px Space Grotesk' : 'bold 12px Space Grotesk'
+  const labelSize = Math.max(10, Math.min(13, position.radius * 0.34))
+  ctx.font = isHovered ? `bold ${labelSize + 1}px Space Grotesk` : `bold ${labelSize}px Space Grotesk`
   ctx.textAlign = 'center'
   ctx.fillText(planet.name, position.x, position.y - radius - 10)
 
   ctx.fillStyle = '#FFD700'
-  ctx.font = isHovered ? '13px Space Grotesk' : '12px Space Grotesk'
+  ctx.font = isHovered ? `${labelSize + 1}px Space Grotesk` : `${labelSize}px Space Grotesk`
   ctx.fillText(`${formatCurrency(planet.monthlyPrice)}/mes`, position.x, position.y + radius + 16)
 }
 
@@ -103,9 +130,9 @@ function drawVisualization(ctx, width, height) {
   ctx.font = '700 16px Space Grotesk'
   ctx.fillText(formatCurrency(totalMonthlySpending.value), layout.centerX, layout.centerY + 12)
 
-  const planetPositions = planets.value.map((planet) => ({
+  const planetPositions = planets.value.map((planet, index) => ({
     planet,
-    position: getPlanetPosition(planet, layout)
+    position: getPlanetPosition(planet, layout, index, planets.value.length)
   }))
   const hoveredPlanet = planetPositions.find(({ planet }) => planet.id === hoveredPlanetId.value)
 
@@ -144,7 +171,8 @@ function getHoveredPlanetId(event) {
   const layout = getSceneLayout(canvas.offsetWidth, canvas.offsetHeight)
 
   return [...planets.value].reverse().find((planet) => {
-    const { x, y, radius } = getPlanetPosition(planet, layout)
+    const originalIndex = planets.value.findIndex(({ id }) => id === planet.id)
+    const { x, y, radius } = getPlanetPosition(planet, layout, originalIndex, planets.value.length)
     const distance = Math.hypot(mouseX - x, mouseY - y)
 
     return distance <= radius
@@ -171,6 +199,17 @@ function handleMouseLeave() {
 
 onMounted(() => {
   render()
+
+  if (canvasRef.value) {
+    resizeObserver = new ResizeObserver(() => {
+      render()
+    })
+    resizeObserver.observe(canvasRef.value)
+  }
+})
+
+onBeforeUnmount(() => {
+  resizeObserver?.disconnect()
 })
 
 watch(() => planets.value, () => {
@@ -203,6 +242,7 @@ watch(totalMonthlySpending, () => {
 
 .planet-visualization {
 margin: 150px 0 100px 0;
+min-width: 0;
 }
 
 p{
@@ -221,15 +261,41 @@ h2{
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 580px;
+  height: clamp(460px, 62vw, 580px);
   border: 5px solid var(--card-color);
   border-radius: var(--border-radius);
   background-color: var(--background-color);
+  overflow: hidden;
 }
 
 canvas {
   width: 100%;
   height: 100%;
   border-radius: var(--border-radius);
+}
+
+@media (max-width: 720px) {
+  .planet-visualization {
+    margin: 80px 0 70px;
+  }
+
+  h2 {
+    margin-left: 0;
+    font-size: clamp(1.35rem, 6vw, var(--font-size-heading));
+  }
+
+  p {
+    margin-left: 0;
+  }
+
+  .planetas {
+    height: 640px;
+  }
+}
+
+@media (max-width: 430px) {
+  .planetas {
+    height: 560px;
+  }
 }
 </style>

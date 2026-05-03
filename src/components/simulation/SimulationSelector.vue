@@ -56,7 +56,7 @@ const onCategorySelected = (cat) => {
             :checked="isSelected(subscription.id)"
             @change="toggleSubscription(subscription.id)"
           >
-          <span>{{ subscription.name }}</span>
+          <span id="sub-name">{{ subscription.name }}</span>
           <span>{{ subscription.category }}</span>
           <span>{{ subscription.price }}€</span>
         </label>
@@ -172,6 +172,11 @@ const onCategorySelected = (cat) => {
 
 .subscription-item input[type="checkbox"]:checked::before {
   transform: scale(1);
+}
+
+#sub-name {
+  font-weight: bold;
+  color: var(--secondary-color);
 }
 
 @media (max-width: 720px) {

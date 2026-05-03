@@ -80,7 +80,7 @@ justify-content: space-evenly;
   font-size: var(--font-size-body);
   font-weight: 600;
 padding: 30px;
-width: 20%;
+width: 30%;
 border-radius: var(--border-radius);
 border: 0;
 }
@@ -88,7 +88,7 @@ border: 0;
 .main-buttons > button:hover{
 cursor: pointer;
 translate: 0 -10px;
-transition: translate 0.3s ease, background-color 0.3s ease;;
+transition: translate 0.3s ease, background-color 0.3s ease;
 }
 
 </style>

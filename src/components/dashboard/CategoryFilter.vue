@@ -23,11 +23,13 @@ const emit = defineEmits(['categorySelected']);
 
 <style scoped>
 h3 {
-font-family: var(--font-heading);
-color: var(--text-color);
+    font-family: var(--font-heading);
+    color: var(--text-color);
+    margin: 0;
 }
 
 select {
+    width: min(100%, 320px);
     font-size: var(--font-size-body);
     font-family: var(--font-body);
     border: 5px solid var(--card-color);
@@ -38,12 +40,25 @@ select {
 }
 .categoryFilter {
     display: flex;
+    align-items: center;
     flex-wrap: wrap;
-    margin-bottom: 20px;
     gap: 20px;
+    max-width: 100%;
 }
 
 .categoryFilter h3 {
-    margin-bottom: 10px;
+    flex: 0 0 auto;
+}
+
+@media (max-width: 950px) {
+    .categoryFilter {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    select {
+        width: 100%;
+    }
 }
 </style>

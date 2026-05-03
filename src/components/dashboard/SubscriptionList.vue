@@ -51,19 +51,21 @@ const onCategorySelected = (cat) => {
 <style scoped>
 
 .header h2 {
-    font-size: var(--font-size-heading);
-    margin: 0px 0px 30px 10px;
+    font-size: clamp(1.35rem, 4vw, var(--font-size-heading));
+    margin: 0;
 }
 
 .header {
     display: flex;
+    align-items: flex-start;
     justify-content: space-between;
-    margin: 10px;
+    gap: 24px;
+    margin: 10px 0 24px;
 }
 
 .categories {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 0.8fr) minmax(120px, 0.8fr);
     color: var(--text-color);
     font-family: var(--font-body);
     font-weight: 600;
@@ -74,6 +76,7 @@ const onCategorySelected = (cat) => {
 
 ul {
     padding: 0;
+    margin: 0;
 }
 
 .items {
@@ -82,10 +85,30 @@ ul {
     border: 5px solid var(--card-color);
     border-radius: var(--border-radius);
     padding: 20px;
+    min-width: 0;
 }
 
 li {
     list-style: none;
     margin-bottom: 20px;
 }
+
+li:last-child {
+    margin-bottom: 0;
+}
+
+@media (max-width: 950px) {
+    .header {
+        flex-direction: column;
+    }
+
+       .items {
+        padding: 16px;
+    }
+
+    .categories {
+        display: none;
+    }
+}
+
 </style>

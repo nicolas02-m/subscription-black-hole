@@ -22,7 +22,7 @@ defineProps({
 <style scoped>
 .subscription-item {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 0.8fr) minmax(120px, 0.8fr);
     align-items: center;
     text-align: center;
     border: 5px solid var(--card-color);
@@ -52,6 +52,8 @@ p {
     font-family: var(--font-body);
     color: var(--primary-color);
     font-weight: 300;
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .details-button {
@@ -81,12 +83,18 @@ p {
 @media (max-width: 950px) {
     .subscription-item {
         grid-template-columns: 1fr;
-        text-align: left;
+        text-align: center;
+        gap: 10px;
     }
 
     .details-button {
-        justify-self: stretch;
-        width: 100%;
+        width: 60%;
+        justify-self: center;
+        margin-top: 10px;
+    }
+
+    p {
+        margin: 4px 0;
     }
 }
 </style>
