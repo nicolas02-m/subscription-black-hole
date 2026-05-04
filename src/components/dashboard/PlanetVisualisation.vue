@@ -239,23 +239,22 @@ watch(totalMonthlySpending, () => {
 </template>
 
 <style scoped>
-
 .planet-visualization {
-margin: 150px 0 100px 0;
-min-width: 0;
+  margin: 150px 0 100px 0;
+  min-width: 0;
 }
 
-p{
+p {
   color: var(--text-color);
   font-family: var(--font-body);
   font-size: var(--font-size-body);
   margin: 0px 0px 20px 10px;
 }
 
-h2{
+h2 {
   font-size: var(--font-size-heading);
   margin: 0px 0px 30px 30px;
-  }
+}
 
 .planetas {
   display: flex;

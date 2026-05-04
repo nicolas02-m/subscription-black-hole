@@ -1,8 +1,8 @@
 <script setup>
+import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import SubscriptionForm from '@/components/subscription/SubscriptionForm.vue'
 import { useSubscriptionStore } from '@/stores/subscription'
-import { useRoute, useRouter } from 'vue-router'
-import { computed } from 'vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -22,16 +22,12 @@ function handleSubmit(payload) {
 <template>
   <div>
     <h1>Editar Suscripción</h1>
-    <SubscriptionForm 
-      v-if="subscription" 
-      :initialValues="subscription"
-      submitLabel="Guardar Cambios"
+    <SubscriptionForm
+      v-if="subscription"
+      :initial-values="subscription"
+      submit-label="Guardar Cambios"
       @submit="handleSubmit"
     />
-    <p v-else>Subscription not found.</p>
+    <p v-else>Suscripción no encontrada.</p>
   </div>
 </template>
-
-<style scoped>
-
-</style>

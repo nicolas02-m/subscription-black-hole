@@ -1,12 +1,9 @@
+import { getMonthlyPrice } from './formatCurrency'
+
 export function calculateMonthlyCost(subscriptions) {
   if (!subscriptions || subscriptions.length === 0) return 0
-  
-  return subscriptions.reduce((total, sub) => {
-    if (sub.frequency === 'yearly') {
-      return total + sub.price / 12
-    }
-    return total + sub.price
-  }, 0)
+
+  return subscriptions.reduce((total, sub) => total + getMonthlyPrice(sub), 0)
 }
 
 export function calculateAnnualCost(subscriptions) {

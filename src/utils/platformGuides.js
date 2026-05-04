@@ -5,7 +5,7 @@ export const PLATFORMS = [
   { value: 'paypal', label: 'PayPal' },
   { value: 'web', label: 'Web' },
   { value: 'other', label: 'Otros' }
-];
+]
 
 export const CANCELLATION_GUIDES = {
   creditCard: {
@@ -34,7 +34,7 @@ export const CANCELLATION_GUIDES = {
     title: 'Guía de cancelación para Play Store',
     steps: [
       'Abre la aplicación Google Play Store.',
-      'Toca el menú (tres líneas) y selecciona "Suscripciones".',
+      'Toca el menú y selecciona "Suscripciones".',
       'Encuentra la suscripción a cancelar.',
       'Toca "Cancelar suscripción".',
       'Sigue las instrucciones para confirmar.',
@@ -72,4 +72,4 @@ export const CANCELLATION_GUIDES = {
       'Monitorea tu cuenta bancaria para asegurar que no se realicen más cargos.'
     ]
   }
-};
+}

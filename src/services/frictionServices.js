@@ -3,9 +3,7 @@ const FRICTION_REPORTS_KEY = 'frictionReports'
 function loadStoredReports() {
   const data = localStorage.getItem(FRICTION_REPORTS_KEY)
 
-  if (!data) {
-    return []
-  }
+  if (!data) return []
 
   try {
     return JSON.parse(data)
@@ -35,8 +33,4 @@ export function saveFrictionReport(reportData) {
   saveStoredReports(reports)
 
   return report
-}
-
-export function getFrictionReports() {
-  return loadStoredReports()
 }

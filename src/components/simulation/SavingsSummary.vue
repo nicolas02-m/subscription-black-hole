@@ -2,13 +2,13 @@
 import { computed } from 'vue'
 import { useSubscriptionStore } from '@/stores/subscription'
 import { useSimulationSelection } from '@/composables/useSimulationSelection'
-import { calculateMonthlyCost, calculateAnnualCost } from '@/utils/calculations'
+import { calculateAnnualCost, calculateMonthlyCost } from '@/utils/calculations'
 
 const subscriptionStore = useSubscriptionStore()
 const { activeSimulation } = useSimulationSelection()
 
 const selectedSubs = computed(() => {
-  return subscriptionStore.subscriptions.filter(sub => 
+  return subscriptionStore.subscriptions.filter(sub =>
     activeSimulation.value.includes(sub.id)
   )
 })
@@ -52,8 +52,8 @@ const annualSavings = computed(() => {
 
 .savings-grid {
   display: flex;
-  justify-content: space-around;
   gap: 40px;
+  justify-content: space-around;
   margin-top: 20px;
   padding: 20px;
 }
@@ -62,29 +62,41 @@ const annualSavings = computed(() => {
   background-color: var(--surface-color);
   border: 3px solid var(--primary-color);
   border-radius: var(--border-radius);
+  font-family: var(--font-body);
   padding: 20px;
   width: 30%;
-  font-family: var(--font-body); 
 }
 
 .savings-card p {
   font-size: var(--font-size-subheading);
-  padding: 10px 0;
   margin: 0;
+  padding: 10px 0;
 }
 
 .amount {
+  color: var(--primary-color);
   display: block;
   font-size: var(--font-size-heading);
   font-weight: bold;
-  color: var(--primary-color);
   margin-top: 10px;
 }
 
 .empty-state {
-  margin-top: 20px;
-  font-style: italic;
   color: var(--text-color);
   font-size: var(--font-size-body);
+  font-style: italic;
+  margin-top: 20px;
+}
+
+@media (max-width: 950px) {
+  .savings-grid {
+    flex-direction: column;
+    gap: 20px;
+    padding: 12px 0;
+  }
+
+  .savings-card {
+    width: auto;
+  }
 }
 </style>

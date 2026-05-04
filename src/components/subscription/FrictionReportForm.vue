@@ -29,6 +29,14 @@ const ratings = [
   { value: '5', label: 'Excelente' }
 ]
 
+const problemOptions = [
+  { key: 'manySteps', label: 'Demasiados pasos' },
+  { key: 'hiddenMenus', label: 'Menús escondidos' },
+  { key: 'manyConfirmations', label: 'Muchas confirmaciones' },
+  { key: 'pageErrors', label: 'Errores en la página' },
+  { key: 'others', label: 'Otros' }
+]
+
 function resetForm() {
   form.rating = '3'
   form.manySteps = false
@@ -40,15 +48,9 @@ function resetForm() {
 }
 
 function buildProblems() {
-  const problems = []
-
-  if (form.manySteps) problems.push('manySteps')
-  if (form.hiddenMenus) problems.push('hiddenMenus')
-  if (form.manyConfirmations) problems.push('manyConfirmations')
-  if (form.pageErrors) problems.push('pageErrors')
-  if (form.others) problems.push('others')
-
-  return problems
+  return problemOptions
+    .filter(option => form[option.key])
+    .map(option => option.key)
 }
 
 function handleSubmit() {
@@ -76,52 +78,39 @@ function handleSubmit() {
       <h2>Problemas de fricción</h2>
       <p>¿Qué problemas estás experimentando con tu suscripción?</p>
     </div>
+
     <section class="friction-report">
       <div class="experience">
-      <div class="experience-rating">
-        <h3>Valoración de la experiencia:</h3>
-        <div class="rating-dots" role="radiogroup" aria-label="Valoración de la experiencia">
-          <label
-            v-for="rating in ratings"
-            :key="rating.value"
-            class="rating-dot"
-            :class="{ selected: form.rating === rating.value }"
-            :title="rating.label"
-          >
-            <input v-model="form.rating" type="radio" name="rating" :value="rating.value">
-            <span>{{ rating.value }}</span>
-          </label>
+        <div class="experience-rating">
+          <h3>Valoración de la experiencia:</h3>
+          <div class="rating-dots" role="radiogroup" aria-label="Valoración de la experiencia">
+            <label
+              v-for="rating in ratings"
+              :key="rating.value"
+              class="rating-dot"
+              :class="{ selected: form.rating === rating.value }"
+              :title="rating.label"
+            >
+              <input v-model="form.rating" type="radio" name="rating" :value="rating.value">
+              <span>{{ rating.value }}</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="checkbox-friction">
+          <div v-for="option in problemOptions" :key="option.key">
+            <input :id="option.key" v-model="form[option.key]" type="checkbox" :name="option.key">
+            <label :for="option.key">{{ option.label }}</label>
+          </div>
         </div>
       </div>
-<div class="checkbox-friction">
-      <div id="many-steps">
-        <input id="manySteps" v-model="form.manySteps" type="checkbox" name="manySteps">
-        <label for="manySteps">Demasiados pasos</label>
-      </div>
-      <div id="hidden-menus">
-        <input id="hiddenMenus" v-model="form.hiddenMenus" type="checkbox" name="hiddenMenus">
-        <label for="hiddenMenus">Menus escondidos</label>
-      </div>
-      <div id="many-confirmations">
-        <input id="manyConfirmations" v-model="form.manyConfirmations" type="checkbox" name="manyConfirmations">
-        <label for="manyConfirmations">Muchas confirmaciones</label>
-      </div>
-      <div id="page-error">
-        <input id="pageErrors" v-model="form.pageErrors" type="checkbox" name="pageErrors">
-        <label for="pageErrors">Errores en la página</label>
-      </div>
-      <div id="other">
-        <input id="others" v-model="form.others" type="checkbox" name="others">
-        <label for="others">Otros</label>
-      </div>
-    </div>
-    </div>
-
 
       <div class="text-details">
         <h3>Danos más detalles:</h3>
-        <textarea v-model="form.details"
-          placeholder="Describe las dificultades encontradas durante la cancelación de tu suscripción..."></textarea>
+        <textarea
+          v-model="form.details"
+          placeholder="Describe las dificultades encontradas durante la cancelación de tu suscripción..."
+        ></textarea>
         <button type="submit">Enviar reporte</button>
       </div>
     </section>
@@ -134,79 +123,28 @@ function handleSubmit() {
 
 <style scoped>
 .friction-form {
-  margin: 80px 0 100px 0;
   border: 5px solid var(--card-color);
   border-radius: var(--border-radius);
+  margin: 80px 0 100px 0;
   padding: 40px 0;
 }
 
-.experience{
-display: flex;
-flex-direction: column;
-align-items: center;
-gap: 40px;
-width: 100%;
-}
-
 .title-friction {
+  padding: 0px 0px 40px 0px;
   text-align: center;
-  padding: 0px 0px 40px 00px;
 }
 
-.checkbox-friction{
+.friction-report {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.experience {
+  align-items: center;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-}
-
-.checkbox-friction > div {
-  display: grid;
-  grid-template-columns: 28px 1fr;
-  align-items: start;
-  gap: 14px;
-  line-height: 1.5;
-}
-
-.checkbox-friction input[type="checkbox"] {
-  appearance: none;
-  -webkit-appearance: none;
-  display: grid;
-  place-content: center;
-  width: 22px;
-  height: 22px;
-  margin: 0;
-  margin-top: 3px;
-  border: 2px solid var(--primary-color);
-  border-radius: 6px;
-  background-color: var(--surface-color);
-  cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.checkbox-friction input[type="checkbox"]::before {
-  content: "";
-  width: 11px;
-  height: 11px;
-  clip-path: polygon(14% 44%, 0 59%, 42% 100%, 100% 16%, 84% 0, 38% 64%);
-  background-color: var(--surface-color);
-  transform: scale(0);
-  transition: transform 0.15s ease;
-}
-
-.checkbox-friction input[type="checkbox"]:checked {
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
-}
-
-.checkbox-friction input[type="checkbox"]:checked::before {
-  transform: scale(1);
-}
-
-
-.checkbox-friction label {
-  font-family: var(--font-body);
-  color: var(--text-color);
-  cursor: pointer;
+  gap: 40px;
+  width: 100%;
 }
 
 .experience-rating {
@@ -226,23 +164,23 @@ width: 100%;
 }
 
 .rating-dot input {
-  position: absolute;
   opacity: 0;
   pointer-events: none;
+  position: absolute;
 }
 
 .rating-dot span {
-  display: grid;
-  place-content: center;
-  width: 44px;
-  height: 44px;
+  background-color: var(--surface-color);
   border: 2px solid var(--primary-color);
   border-radius: 50%;
-  background-color: var(--surface-color);
   color: var(--primary-color);
+  display: grid;
   font-family: var(--font-heading);
   font-weight: 700;
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  height: 44px;
+  place-content: center;
+  transition: translate 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease;
+  width: 44px;
 }
 
 .rating-dot:hover span,
@@ -250,35 +188,133 @@ width: 100%;
   background-color: var(--secondary-color);
   border-color: var(--secondary-color);
   color: var(--surface-color);
-  transition: translate 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
   translate: 0 -10px;
 }
 
+.checkbox-friction {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.checkbox-friction > div {
+  align-items: start;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 28px 1fr;
+  line-height: 1.5;
+}
+
+.checkbox-friction input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: var(--surface-color);
+  border: 2px solid var(--primary-color);
+  border-radius: 6px;
+  cursor: pointer;
+  display: grid;
+  height: 22px;
+  margin: 3px 0 0;
+  place-content: center;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  width: 22px;
+}
+
+.checkbox-friction input[type="checkbox"]::before {
+  background-color: var(--surface-color);
+  clip-path: polygon(14% 44%, 0 59%, 42% 100%, 100% 16%, 84% 0, 38% 64%);
+  content: "";
+  height: 11px;
+  transform: scale(0);
+  transition: transform 0.15s ease;
+  width: 11px;
+}
+
+.checkbox-friction input[type="checkbox"]:checked {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.checkbox-friction input[type="checkbox"]:checked::before {
+  transform: scale(1);
+}
+
+.checkbox-friction label {
+  color: var(--text-color);
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+
+.text-details {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: space-between;
+  margin: 0 40px;
+}
+
+textarea {
+  background-color: var(--background-color);
+  border: 5px solid var(--primary-color);
+  border-radius: var(--border-radius);
+  color: var(--text-color);
+  height: 20vh;
+  padding: 20px;
+}
+
+textarea:focus {
+  border-color: var(--secondary-color);
+}
+
+textarea::placeholder {
+  color: var(--text-color);
+  font-family: var(--font-body);
+}
+
+.text-details button {
+  background-color: var(--primary-color);
+  border: 0px;
+  border-radius: var(--border-radius);
+  color: var(--surface-color);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  font-weight: 600;
+  margin-top: 40px;
+  padding: 20px;
+  transition: translate 0.2s ease, background-color 0.3s ease;
+}
+
+.text-details button:hover {
+  background-color: var(--secondary-color);
+  translate: 0px -5px;
+}
+
 .success-popup {
-  position: fixed;
-  top: 24px;
-  right: 24px;
-  z-index: 20;
-  max-width: min(320px, calc(100vw - 48px));
-  padding: 18px 22px;
+  animation: popup-in 0.25s ease;
+  background-color: var(--surface-color);
   border: 2px solid var(--sucess-color);
   border-radius: 18px;
-  background-color: var(--surface-color);
-  color: var(--text-color);
-  font-weight: 600;
-  font-family: var(--font-body);
   box-shadow: 0 0 18px rgba(34, 197, 94, 0.25);
-  animation: popup-in 0.25s ease;
+  color: var(--text-color);
+  font-family: var(--font-body);
+  font-weight: 600;
+  max-width: min(320px, calc(100vw - 48px));
+  padding: 18px 22px;
+  position: fixed;
+  right: 24px;
+  top: 24px;
+  z-index: 20;
 }
 
 .success-popup::before {
+  background-color: var(--sucess-color);
+  border-radius: 50%;
   content: "";
   display: inline-block;
-  width: 10px;
   height: 10px;
   margin-right: 10px;
-  border-radius: 50%;
-  background-color: var(--sucess-color);
+  width: 10px;
 }
 
 @keyframes popup-in {
@@ -293,75 +329,17 @@ width: 100%;
   }
 }
 
-.friction-report {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
+@media (max-width: 950px) {
+  .friction-report {
+    gap: 30px;
+    grid-template-columns: 1fr;
+  }
 
-textarea {
-  height: 20vh;
-  border: 5px solid var(--primary-color);
-  background-color: var(--background-color);
-  border-radius: var(--border-radius);
-  color: var(--text-color);
-  padding: 20px;
-}
-
-textarea:focus{
-  border-color: var(--secondary-color);
-}
-
-
-
-textarea::placeholder{
-color: var(--text-color);
-font-family: var(--font-body);
-}
-
-.text-details {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 20px;
-  margin: 0 40px;
-}
-
-.text-details button{
-padding: 20px;
-color: var(--surface-color);
-background-color: var(--primary-color);
-border-radius: var(--border-radius);
-font-family: var(--font-body);
-font-size: var(--font-body);
-font-weight: 600;
-border: 0px;
-cursor: pointer;
-margin-top: auto;
-margin-top: 40px;
-}
-
-.text-details button:hover{
-translate: 0px -5px;
-transition: 0.2s ease, background-color 0.3s ease;
-background-color: var(--secondary-color);
-}
-
-
-
-@media (max-width: 950px){
-
-.friction-report {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 30px;
-}
-
-.success-popup {
-  top: 16px;
-  right: 16px;
-  left: 16px;
-  max-width: none;
-}
-
+  .success-popup {
+    left: 16px;
+    max-width: none;
+    right: 16px;
+    top: 16px;
+  }
 }
 </style>

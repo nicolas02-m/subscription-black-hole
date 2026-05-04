@@ -1,10 +1,10 @@
 <script setup>
+import { computed, ref } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useSubscriptionStore } from '@/stores/subscription'
 import { useSimulationSelection } from '@/composables/useSimulationSelection'
-import { storeToRefs } from 'pinia'
-import { ref, computed } from 'vue'
 import CategoryFilter from '@/components/dashboard/CategoryFilter.vue'
-import { CATEGORIES } from '@/utils/constants'
+import { CATEGORIES, getCategoryLabel } from '@/utils/constants'
 
 const subscriptionStore = useSubscriptionStore()
 const { subscriptions, categories } = storeToRefs(subscriptionStore)
@@ -14,11 +14,13 @@ const selectedCategory = ref('')
 
 const filteredSubscriptions = computed(() => {
   if (!selectedCategory.value) return subscriptions.value
+
   return subscriptions.value.filter(sub => sub.category === selectedCategory.value)
 })
 
 const usedCategories = computed(() => {
   const used = categories.value
+
   return CATEGORIES.filter(cat => used.includes(cat.value))
 })
 
@@ -31,15 +33,15 @@ const onCategorySelected = (cat) => {
   <div class="subscription-selector">
     <h2>Seleccionar suscripciones</h2>
     <p>Elige las suscripciones que deseas eliminar para calcular el ahorro. ({{ getSelectedCount() }} seleccionadas)</p>
-    
+
     <div class="selector-content">
       <div class="header">
         <CategoryFilter :categories="usedCategories" @categorySelected="onCategorySelected" />
       </div>
-      
+
       <div class="categories-header">
         <span></span>
-        <p>Subscripción</p>
+        <p>Suscripción</p>
         <p>Categoría</p>
         <p>Impacto mensual</p>
       </div>
@@ -51,13 +53,13 @@ const onCategorySelected = (cat) => {
           class="subscription-item"
           :class="{ selected: isSelected(subscription.id) }"
         >
-          <input 
-            type="checkbox" 
+          <input
+            type="checkbox"
             :checked="isSelected(subscription.id)"
             @change="toggleSubscription(subscription.id)"
           >
-          <span id="sub-name">{{ subscription.name }}</span>
-          <span>{{ subscription.category }}</span>
+          <span class="subscription-name">{{ subscription.name }}</span>
+          <span>{{ getCategoryLabel(subscription.category) }}</span>
           <span>{{ subscription.price }}€</span>
         </label>
       </div>
@@ -67,13 +69,13 @@ const onCategorySelected = (cat) => {
 
 <style scoped>
 .subscription-selector {
+  background-color: var(--surface-color);
+  border: 5px solid var(--card-color);
+  border-radius: var(--border-radius);
   display: flex;
   flex-direction: column;
   gap: 16px;
-  border: 5px solid var(--card-color);
-  border-radius: var(--border-radius);
   padding: 28px;
-  background-color: var(--surface-color);
 }
 
 .subscription-selector h2,
@@ -91,20 +93,20 @@ const onCategorySelected = (cat) => {
 }
 
 .categories-header {
-  display: grid;
-  grid-template-columns: 50px 1fr 150px 100px;
   align-items: center;
-  gap: 16px;
-  padding: 0 18px 12px;
   border-bottom: 2px solid var(--card-color);
+  display: grid;
   font-weight: 600;
+  gap: 16px;
+  grid-template-columns: 50px 1fr 150px 100px;
   margin-bottom: 16px;
+  padding: 0 18px 12px;
 }
 
 .categories-header p {
-  margin: 0;
   color: var(--secondary-color);
   font-weight: 700;
+  margin: 0;
 }
 
 .items {
@@ -114,18 +116,18 @@ const onCategorySelected = (cat) => {
 }
 
 .subscription-item {
-  display: grid;
-  grid-template-columns: 50px 1fr 150px 100px;
-  gap: 16px;
-  padding: 16px 18px;
-  border: 2px solid var(--primary-color);
-  border-radius: 18px;
   align-items: center;
   background-color: var(--background-color);
+  border: 2px solid var(--primary-color);
+  border-radius: 18px;
   color: var(--text-color);
   cursor: pointer;
+  display: grid;
   font-family: var(--font-body);
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  gap: 16px;
+  grid-template-columns: 50px 1fr 150px 100px;
+  padding: 16px 18px;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
 .subscription-item:hover,
@@ -143,26 +145,26 @@ const onCategorySelected = (cat) => {
 .subscription-item input[type="checkbox"] {
   appearance: none;
   -webkit-appearance: none;
-  display: grid;
-  place-content: center;
-  width: 22px;
-  height: 22px;
-  margin: 0;
+  background-color: var(--surface-color);
   border: 2px solid var(--primary-color);
   border-radius: 6px;
-  background-color: var(--surface-color);
   cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  display: grid;
+  height: 22px;
+  margin: 0;
+  place-content: center;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  width: 22px;
 }
 
 .subscription-item input[type="checkbox"]::before {
-  content: "";
-  width: 11px;
-  height: 11px;
-  clip-path: polygon(14% 44%, 0 59%, 42% 100%, 100% 16%, 84% 0, 38% 64%);
   background-color: var(--surface-color);
+  clip-path: polygon(14% 44%, 0 59%, 42% 100%, 100% 16%, 84% 0, 38% 64%);
+  content: "";
+  height: 11px;
   transform: scale(0);
   transition: transform 0.15s ease;
+  width: 11px;
 }
 
 .subscription-item input[type="checkbox"]:checked {
@@ -174,9 +176,9 @@ const onCategorySelected = (cat) => {
   transform: scale(1);
 }
 
-#sub-name {
-  font-weight: bold;
+.subscription-name {
   color: var(--secondary-color);
+  font-weight: bold;
 }
 
 @media (max-width: 720px) {

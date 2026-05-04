@@ -37,169 +37,171 @@ function openCancellationLink() {
         </button>
       </div>
 
-      <button class="cancelation-link-button" @click="openCancellationLink" :disabled="!props.subscription.cancellationLink">
+      <button
+        class="cancelation-link-button"
+        :disabled="!props.subscription.cancellationLink"
+        @click="openCancellationLink"
+      >
         Ir al enlace de cancelación
       </button>
     </div>
+
     <div class="steps-cancelation">
-       <h2>{{ guide.title }} sigue estos pasos:</h2>
-       <div class="check-cancelation">
-      <ol>
-        <li v-for="(step, index) in guide.steps" :key="step">
-          <input type="checkbox" :id="'step-' + index">
-          <label :for="'step-' + index">{{ step }}</label>
-        </li>
-      </ol>
+      <h2>{{ guide.title }} sigue estos pasos:</h2>
+      <div class="check-cancelation">
+        <ol>
+          <li v-for="(step, index) in guide.steps" :key="step">
+            <input type="checkbox" :id="'step-' + index">
+            <label :for="'step-' + index">{{ step }}</label>
+          </li>
+        </ol>
       </div>
     </div>
   </section>
 </template>
 
 <style scoped>
-
 .cancelation-guide {
   display: grid;
+  gap: 40px;
   grid-template-columns: 1fr 2fr;
   height: 50vh;
-  gap: 40px;
   margin: 40px 0;
+}
+
+.steps-cancelation,
+.payment-platform {
+  border: 5px solid var(--card-color);
+  border-radius: var(--border-radius);
+  height: 100%;
 }
 
 .steps-cancelation {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  border: 5px solid var(--card-color);
-  border-radius: var(--border-radius);
 }
 
-.steps-cancelation h2{
-text-align: center;
-font-size: var(--font-size-subheading);
-margin-top: 50px;
-margin-bottom: 0;
+.steps-cancelation h2 {
+  font-size: var(--font-size-subheading);
+  margin-bottom: 0;
+  margin-top: 50px;
+  text-align: center;
 }
-
 
 .payment-platform {
-  border: 5px solid var(--card-color);
-  border-radius: var(--border-radius);
+  align-items: center;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  align-items: center;
-  height: 100%
 }
 
-.payment-platform h2{
-margin: 40px 0;
-font-size: var(--font-size-subheading);
-
-}
-
-.cancelation-link-button{
-padding: 20px;
-width: 80%;
-color: var(--surface-color);
-background-color: var(--primary-color);
-border-radius: var(--border-radius);
-font-family: var(--font-body);
-font-size: var(--font-body);
-font-weight: 600;
-border: 0px;
-cursor: pointer;
-margin-top: auto;
-margin-bottom: 40px;
-}
-
-.cancelation-link-button:disabled {
-opacity: 0.5;
-cursor: not-allowed;
-}
-
-.cancelation-link-button:hover{
-translate: 0px -10px;
-transition: 0.2s ease;
-background-color: var(--secondary-color);
+.payment-platform h2 {
+  font-size: var(--font-size-subheading);
+  margin: 40px 0;
 }
 
 .platform-options {
-display: flex;
-flex-direction: column;
-gap: 12px;
-width: 80%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 80%;
 }
 
 .platform-option {
-padding: 12px 16px;
-border: 2px solid var(--card-color);
-border-radius: 14px;
-background-color: var(--surface-color);
-color: var(--text-color);
-font-family: var(--font-body);
-font-size: 1em;
-font-weight: 600;
-opacity: 0.45;
+  background-color: var(--surface-color);
+  border: 2px solid var(--card-color);
+  border-radius: 14px;
+  color: var(--text-color);
+  font-family: var(--font-body);
+  font-size: 1em;
+  font-weight: 600;
+  opacity: 0.45;
+  padding: 12px 16px;
 }
 
 .platform-option.selected {
-border-color: var(--primary-color);
-background-color: rgba(247, 179, 106, 0.15);
-color: var(--primary-color);
-opacity: 1;
+  background-color: rgba(247, 179, 106, 0.15);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  opacity: 1;
 }
 
-.check-cancelation{
+.cancelation-link-button {
+  background-color: var(--primary-color);
+  border: 0px;
+  border-radius: var(--border-radius);
+  color: var(--surface-color);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  font-weight: 600;
+  margin-bottom: 40px;
+  margin-top: auto;
+  padding: 20px;
+  transition: translate 0.2s ease, background-color 0.3s ease;
+  width: 80%;
+}
+
+.cancelation-link-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.cancelation-link-button:hover {
+  background-color: var(--secondary-color);
+  translate: 0px -10px;
+}
+
+.check-cancelation {
+  align-items: center;
   display: flex;
-flex: 1;
-justify-content: center;
-align-items: center;
+  flex: 1;
+  justify-content: center;
 }
 
-.check-cancelation ol{
-display: flex;
-flex-direction: column;
-gap: 50px;
-color: white;
-font-family: var(--font-body);
-list-style: none;
-padding: 0;
-margin: 0;
-width: 90%;
+.check-cancelation ol {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-body);
+  gap: 50px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 90%;
 }
 
 .check-cancelation li {
-  display: grid;
-  grid-template-columns: 28px 1fr;
   align-items: start;
+  display: grid;
   gap: 14px;
+  grid-template-columns: 28px 1fr;
   line-height: 1.5;
 }
 
 .check-cancelation input[type="checkbox"] {
   appearance: none;
   -webkit-appearance: none;
-  display: grid;
-  place-content: center;
-  width: 22px;
-  height: 22px;
-  margin: 0;
-  margin-top: 3px;
+  background-color: var(--surface-color);
   border: 2px solid var(--primary-color);
   border-radius: 6px;
-  background-color: var(--surface-color);
   cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  display: grid;
+  height: 22px;
+  margin: 3px 0 0;
+  place-content: center;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  width: 22px;
 }
 
 .check-cancelation input[type="checkbox"]::before {
-  content: "";
-  width: 11px;
-  height: 11px;
-  clip-path: polygon(14% 44%, 0 59%, 42% 100%, 100% 16%, 84% 0, 38% 64%);
   background-color: var(--surface-color);
+  clip-path: polygon(14% 44%, 0 59%, 42% 100%, 100% 16%, 84% 0, 38% 64%);
+  content: "";
+  height: 11px;
   transform: scale(0);
   transition: transform 0.15s ease;
+  width: 11px;
 }
 
 .check-cancelation input[type="checkbox"]:checked {
@@ -211,22 +213,17 @@ width: 90%;
   transform: scale(1);
 }
 
-
 .check-cancelation label {
+  color: var(--text-color);
   cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 1.2em;
 }
 
-
-label{
-font-family: var(--font-body);
-color: var(--text-color);
-font-size: 1.2em;
-}
-
-@media (max-width: 950px){
-.cancelation-guide{
-  grid-template-columns: 1fr;
-  height: auto;
+@media (max-width: 950px) {
+  .cancelation-guide {
+    grid-template-columns: 1fr;
+    height: auto;
   }
 
   .steps-cancelation,
@@ -252,11 +249,7 @@ font-size: 1.2em;
   }
 
   .check-cancelation li {
-  display: grid;
-  grid-template-columns: 28px 1fr;
-  gap: 12px;
-  line-height: 1.5;
+    gap: 12px;
+  }
 }
-}
-
 </style>

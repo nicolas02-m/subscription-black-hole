@@ -21,11 +21,6 @@ export function useSimulationSelection() {
     return selectedSubscriptions.value.length
   }
 
-  function clearSelection() {
-    selectedSubscriptions.value = []
-    activeSimulation.value = []
-  }
-
   function runSimulation() {
     activeSimulation.value = [...selectedSubscriptions.value]
   }
@@ -34,19 +29,13 @@ export function useSimulationSelection() {
     activeSimulation.value = []
   }
 
-  function setSelected(subscriptions) {
-    selectedSubscriptions.value = subscriptions.map(sub => sub.id)
-  }
-
   return {
     selectedSubscriptions,
     activeSimulation,
     toggleSubscription,
     isSelected,
     getSelectedCount,
-    clearSelection,
     runSimulation,
-    resetSimulation,
-    setSelected,
+    resetSimulation
   }
 }
