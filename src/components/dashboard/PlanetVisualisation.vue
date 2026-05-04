@@ -274,7 +274,7 @@ canvas {
   border-radius: var(--border-radius);
 }
 
-@media (max-width: 720px) {
+@media (max-width: 950px) {
   .planet-visualization {
     margin: 80px 0 70px;
   }

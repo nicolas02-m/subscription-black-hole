@@ -5,7 +5,7 @@ const store = useSubscriptionStore();
 </script>
 <template>
   <div class="expense-summary">
-    <h2>Gastados suscripciones</h2>
+    <h2>Gastos suscripciones</h2>
     <div class="total">
     <p><span>{{store.monthlyTotal.toFixed(2)}}</span>/mes</p>
     <p><span>{{store.annualTotal.toFixed(2)}}</span>/año</p>
@@ -17,7 +17,7 @@ const store = useSubscriptionStore();
 h2 {
     font-weight: 600;
     font-size: clamp(1.35rem, 4vw, var(--font-size-heading));
-    margin: 0 0 24px;
+     margin: 0px 0px 30px 30px;
 }
 
 .expense-summary {

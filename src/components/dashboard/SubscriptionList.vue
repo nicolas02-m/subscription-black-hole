@@ -52,13 +52,14 @@ const onCategorySelected = (cat) => {
 
 .header h2 {
     font-size: clamp(1.35rem, 4vw, var(--font-size-heading));
-    margin: 0;
+     margin: 0px 0px 30px 30px;
 }
 
 .header {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
+    align-items: center;
     gap: 24px;
     margin: 10px 0 24px;
 }

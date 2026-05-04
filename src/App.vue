@@ -13,7 +13,6 @@ onMounted(() => {
 
 <template>
   <AppHeader />
-
 <main>
   <router-view />
   </main>

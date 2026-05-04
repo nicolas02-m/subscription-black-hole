@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import DashboardView from "@/views/DashboardView.vue";
-import SubscriptionDetail from "@/views/SubscritptionDetail.vue";
+import SubscriptionDetail from "@/views/SubscriptionDetail.vue";
 import SimulationView from "@/views/SimulationView.vue";
 import AddSubscription from "@/views/AddSubscription.vue";
 import EditSubscriptionView from "@/views/EditSubscriptionView.vue";

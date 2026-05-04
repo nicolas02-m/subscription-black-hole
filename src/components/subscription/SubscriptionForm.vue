@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, watch } from 'vue'
-import PaymentPlaformCard from './PaymentPlaformCard.vue'
+import PaymentPlatformCard from './PaymentPlatformCard.vue'
 import { CATEGORIES } from '@/utils/constants'
 
 const props = defineProps({
@@ -125,7 +125,6 @@ function handleReset() {
                 <label for="price">Precio:</label>
                 <input id="price" type="number" name="price" placeholder="12.99" v-model="form.price" min="0"
                     step="0.01" required>
-                <span id="currency">€</span>
             </div>
             <div class="field">
                 <label for="category">Categoría:</label>
@@ -159,7 +158,7 @@ function handleReset() {
             <h2>Paso 2: Datos opcionales</h2>
             <div class="field">
                 <label>Plataforma de pago:</label>
-                <PaymentPlaformCard v-model="form.paymentPlatform" />
+                <PaymentPlatformCard v-model="form.paymentPlatform" />
             </div>
             <div class="field">
                 <label for="cancellationLink">Link de cancelación:</label>
@@ -169,7 +168,13 @@ function handleReset() {
         </div>
         <div class="formActions">
             <button class="clearButton" type="button" @click="handleReset">Limpiar Formulario</button>
-            <button class="submitButton" type="submit">{{ submitLabel }}</button>
+            <button class="submitButton" type="submit">{{ submitLabel }}
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="-5.0 -10.0 110.0 135.0">
+                    <path
+                        d="m50 8.332c22.996 0 41.668 18.672 41.668 41.668s-18.672 41.668-41.668 41.668-41.668-18.672-41.668-41.668 18.672-41.668 41.668-41.668zm-4.168 45.836v12.5c0 2.3008 1.8672 4.1641 4.168 4.1641s4.168-1.8672 4.168-4.1641v-12.5h12.5c2.3008 0 4.1641-1.8672 4.1641-4.168s-1.8672-4.168-4.1641-4.168h-12.5v-12.5c0-2.3008-1.8672-4.1641-4.168-4.1641s-4.168 1.8672-4.168 4.1641v12.5h-12.5c-2.3008 0-4.1641 1.8672-4.1641 4.168s1.8672 4.168 4.1641 4.168z"
+                        fill-rule="evenodd" />
+                </svg>
+            </button>
         </div>
     </form>
 </template>
@@ -216,6 +221,8 @@ input:focus {
 
 .field label {
     font-weight: 600;
+    font-family: var(--font-body);
+    font-size: var(--font-text-size);
 }
 
 .field input,
@@ -223,7 +230,9 @@ input:focus {
     padding: 12px 14px;
     border: 5px solid var(--card-color);
     border-radius: var(--border-radius);
-    font: inherit;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: var(--font-text-size);
 }
 
 .cardGroup {
@@ -272,14 +281,25 @@ input:focus {
 }
 
 .submitButton {
+    display: flex;
+    align-items: center;
     padding: 12px 18px;
     border: none;
     border-radius: var(--border-radius);
     background: var(--primary-color);
     color: var(--surface-color);
-    font: inherit;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: var(--font-text-size);
     cursor: pointer;
     transition: transform 0.2s ease, translate 0.2s ease;
+}
+
+.submitButton svg {
+    width: 30px;
+    height: 30px;
+    fill: var(--surface-color);
+    margin-left: 8px;
 }
 
 .submitButton:hover {
@@ -300,7 +320,9 @@ input:focus {
     border-radius: var(--border-radius);
     background: transparent;
     color: var(--primary-color);
-    font: inherit;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: var(--font-text-size);
     cursor: pointer;
     transition: transform 0.4s ease, translate 0.3s ease, color 0.3s ease;
 }
