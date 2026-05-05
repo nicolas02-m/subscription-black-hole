@@ -1,5 +1,6 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { gsap } from 'gsap'
 import { useSubscriptionStore } from '@/stores/subscription'
 import { usePlanets } from '@/composables/usePlanets'
 import { formatCurrency } from '@/utils/formatCurrency'
@@ -7,8 +8,10 @@ import { formatCurrency } from '@/utils/formatCurrency'
 const store = useSubscriptionStore()
 const { planets } = usePlanets()
 const canvasRef = ref(null)
+const planetFrameRef = ref(null)
 const hoveredPlanetId = ref(null)
 let resizeObserver = null
+let frameTween = null
 
 const totalMonthlySpending = computed(() => {
   return store.monthlyTotal
@@ -161,6 +164,17 @@ function render() {
   drawVisualization(ctx, width, height)
 }
 
+function animatePlanetFrame() {
+  if (!planetFrameRef.value) return
+
+  frameTween?.kill()
+  frameTween = gsap.fromTo(
+    planetFrameRef.value,
+    { opacity: 0.72, scale: 0.98 },
+    { opacity: 1, scale: 1, duration: 0.65, ease: 'power2.out' }
+  )
+}
+
 function getHoveredPlanetId(event) {
   if (!canvasRef.value) return null
 
@@ -199,6 +213,7 @@ function handleMouseLeave() {
 
 onMounted(() => {
   render()
+  animatePlanetFrame()
 
   if (canvasRef.value) {
     resizeObserver = new ResizeObserver(() => {
@@ -209,11 +224,13 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  frameTween?.kill()
   resizeObserver?.disconnect()
 })
 
 watch(() => planets.value, () => {
   render()
+  animatePlanetFrame()
 }, { deep: true })
 
 watch(totalMonthlySpending, () => {
@@ -228,7 +245,7 @@ watch(totalMonthlySpending, () => {
     <p>Las suscripciones más caras quedan más cerca del agujero negro y los planetas se reparten a ambos lados con pequeñas variaciones verticales.</p>
   </div>
 
-  <div class="planetas">
+  <div ref="planetFrameRef" class="planetas">
     <canvas
       ref="canvasRef"
       @mousemove="handleMouseMove"

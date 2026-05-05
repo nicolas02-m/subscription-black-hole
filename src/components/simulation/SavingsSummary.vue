@@ -1,11 +1,19 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, reactive, watch } from 'vue'
+import { gsap } from 'gsap'
 import { useSubscriptionStore } from '@/stores/subscription'
 import { useSimulationSelection } from '@/composables/useSimulationSelection'
 import { calculateAnnualCost, calculateMonthlyCost } from '@/utils/calculations'
 
 const subscriptionStore = useSubscriptionStore()
 const { activeSimulation } = useSimulationSelection()
+
+let amountTween = null
+
+const animatedSavings = reactive({
+  monthly: 0,
+  annual: 0
+})
 
 const selectedSubs = computed(() => {
   return subscriptionStore.subscriptions.filter(sub =>
@@ -20,6 +28,25 @@ const monthlySavings = computed(() => {
 const annualSavings = computed(() => {
   return calculateAnnualCost(selectedSubs.value)
 })
+
+function animateSavings() {
+  amountTween?.kill()
+
+  amountTween = gsap.to(animatedSavings, {
+    monthly: monthlySavings.value,
+    annual: annualSavings.value,
+    duration: 0.8,
+    ease: 'power2.out'
+  })
+}
+
+watch([monthlySavings, annualSavings], () => {
+  animateSavings()
+}, { immediate: true })
+
+onBeforeUnmount(() => {
+  amountTween?.kill()
+})
 </script>
 
 <template>
@@ -28,15 +55,12 @@ const annualSavings = computed(() => {
     <div class="savings-grid">
       <div class="savings-card">
         <p>Por año</p>
-        <span class="amount">{{ annualSavings.toFixed(2) }}€</span>
+        <span class="amount">{{ animatedSavings.annual.toFixed(2) }}€</span>
       </div>
       <div class="savings-card">
         <p>Por mes</p>
-        <span class="amount">{{ monthlySavings.toFixed(2) }}€</span>
+        <span class="amount">{{ animatedSavings.monthly.toFixed(2) }}€</span>
       </div>
-    </div>
-    <div v-if="selectedSubs.length === 0" class="empty-state">
-      <p>Ejecuta la simulación para ver el ahorro potencial</p>
     </div>
   </div>
 </template>
@@ -79,13 +103,6 @@ const annualSavings = computed(() => {
   font-size: var(--font-size-heading);
   font-weight: bold;
   margin-top: 10px;
-}
-
-.empty-state {
-  color: var(--text-color);
-  font-size: var(--font-size-body);
-  font-style: italic;
-  margin-top: 20px;
 }
 
 @media (max-width: 950px) {

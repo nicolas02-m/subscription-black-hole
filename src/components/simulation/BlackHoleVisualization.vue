@@ -1,5 +1,6 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { gsap } from 'gsap'
 import { useSubscriptionStore } from '@/stores/subscription'
 import { useSimulationSelection } from '@/composables/useSimulationSelection'
 import { calculateMonthlyCost, calculateRemainingCost, calculateSavingsPercentage } from '@/utils/calculations'
@@ -10,6 +11,13 @@ const subscriptionStore = useSubscriptionStore()
 const { activeSimulation } = useSimulationSelection()
 
 let resizeObserver = null
+let activeTween = null
+
+const animatedState = {
+  currentCost: 0,
+  remainingCost: 0,
+  percentage: 0
+}
 
 const selectedSubs = computed(() => {
   return subscriptionStore.subscriptions.filter(sub =>
@@ -90,31 +98,54 @@ function drawBlackHole(ctx, width, height, currentCost, remainingCost, percentag
   ctx.fillText(`${percentage.toFixed(1)}% ahorrado`, width / 2, height - 40)
 }
 
-function renderBlackHole() {
-  if (!canvasRef.value) return
+function getCanvasContext() {
+  if (!canvasRef.value) return null
 
   const canvas = canvasRef.value
   const ctx = canvas.getContext('2d')
   const width = canvas.offsetWidth
   const height = canvas.offsetHeight
+
+  if (!width || !height) return null
+
   const pixelRatio = window.devicePixelRatio || 1
 
   canvas.width = width * pixelRatio
   canvas.height = height * pixelRatio
   ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0)
 
+  return { ctx, width, height }
+}
+
+function renderBlackHole(state = animatedState) {
+  const canvasContext = getCanvasContext()
+  if (!canvasContext) return
+
   drawBlackHole(
-    ctx,
-    width,
-    height,
-    currentMonthlyCost.value,
-    remainingMonthlyCost.value,
-    clampedSavings.value
+    canvasContext.ctx,
+    canvasContext.width,
+    canvasContext.height,
+    state.currentCost,
+    state.remainingCost,
+    state.percentage
   )
 }
 
+function animateBlackHole() {
+  activeTween?.kill()
+
+  activeTween = gsap.to(animatedState, {
+    currentCost: currentMonthlyCost.value,
+    remainingCost: remainingMonthlyCost.value,
+    percentage: clampedSavings.value,
+    duration: 0.9,
+    ease: 'elastic.out(1, 1)',
+    onUpdate: () => renderBlackHole()
+  })
+}
+
 onMounted(() => {
-  renderBlackHole()
+  animateBlackHole()
 
   if (canvasRef.value) {
     resizeObserver = new ResizeObserver(() => {
@@ -125,11 +156,12 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  activeTween?.kill()
   resizeObserver?.disconnect()
 })
 
-watch([activeSimulation, currentMonthlyCost], () => {
-  renderBlackHole()
+watch([activeSimulation, currentMonthlyCost, remainingMonthlyCost, clampedSavings], () => {
+  animateBlackHole()
 })
 </script>
 

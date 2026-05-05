@@ -1,15 +1,43 @@
 <script setup>
+import { onBeforeUnmount, reactive, watch } from 'vue'
+import { gsap } from 'gsap'
 import { useSubscriptionStore } from '@/stores/subscription'
 
 const store = useSubscriptionStore()
+
+let totalTween = null
+
+const animatedTotals = reactive({
+  monthly: 0,
+  annual: 0
+})
+
+function animateTotals() {
+  totalTween?.kill()
+
+  totalTween = gsap.to(animatedTotals, {
+    monthly: store.monthlyTotal,
+    annual: store.annualTotal,
+    duration: 0.8,
+    ease: "power2.out",
+  })
+}
+
+watch(() => [store.monthlyTotal, store.annualTotal], () => {
+  animateTotals()
+}, { immediate: true })
+
+onBeforeUnmount(() => {
+  totalTween?.kill()
+})
 </script>
 
 <template>
   <div class="expense-summary">
     <h2>Gastos suscripciones</h2>
     <div class="total">
-      <p><span>{{ store.monthlyTotal.toFixed(2) }}</span>/mes</p>
-      <p><span>{{ store.annualTotal.toFixed(2) }}</span>/año</p>
+      <p><span>{{ animatedTotals.monthly.toFixed(2) }}</span>/mes</p>
+      <p><span>{{ animatedTotals.annual.toFixed(2) }}</span>/año</p>
     </div>
   </div>
 </template>
