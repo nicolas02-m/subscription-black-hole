@@ -8,10 +8,14 @@ import { formatCurrency } from '@/utils/formatCurrency'
 const store = useSubscriptionStore()
 const { planets } = usePlanets()
 const canvasRef = ref(null)
-const planetFrameRef = ref(null)
 const hoveredPlanetId = ref(null)
 let resizeObserver = null
-let frameTween = null
+let blackHoleBreathTween = null
+
+const blackHoleBreath = {
+  scale: 1,
+  glow: 55
+}
 
 const totalMonthlySpending = computed(() => {
   return store.monthlyTotal
@@ -114,13 +118,13 @@ function drawVisualization(ctx, width, height) {
   const layout = getSceneLayout(width, height)
 
   ctx.shadowColor = '#f7b36a'
-  ctx.shadowBlur = 55
+  ctx.shadowBlur = blackHoleBreath.glow
   ctx.shadowOffsetX = 0
   ctx.shadowOffsetY = 0
 
   ctx.fillStyle = 'black'
   ctx.beginPath()
-  ctx.arc(layout.centerX, layout.centerY, layout.blackHoleRadius, 0, Math.PI * 2)
+  ctx.arc(layout.centerX, layout.centerY, layout.blackHoleRadius * blackHoleBreath.scale, 0, Math.PI * 2)
   ctx.fill()
 
   ctx.shadowColor = 'rgba(0, 0, 0, 0)'
@@ -164,15 +168,18 @@ function render() {
   drawVisualization(ctx, width, height)
 }
 
-function animatePlanetFrame() {
-  if (!planetFrameRef.value) return
+function startBlackHoleBreathing() {
+  blackHoleBreathTween?.kill()
 
-  frameTween?.kill()
-  frameTween = gsap.fromTo(
-    planetFrameRef.value,
-    { opacity: 0.72, scale: 0.98 },
-    { opacity: 1, scale: 1, duration: 0.65, ease: 'power2.out' }
-  )
+  blackHoleBreathTween = gsap.to(blackHoleBreath, {
+    scale: 1.1,
+    glow: 72,
+    duration: 1.8,
+    ease: "sine.inOut",
+    repeat: -1,
+    yoyo: true,
+    onUpdate: () => render()
+  })
 }
 
 function getHoveredPlanetId(event) {
@@ -213,7 +220,7 @@ function handleMouseLeave() {
 
 onMounted(() => {
   render()
-  animatePlanetFrame()
+  startBlackHoleBreathing()
 
   if (canvasRef.value) {
     resizeObserver = new ResizeObserver(() => {
@@ -224,13 +231,12 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-  frameTween?.kill()
+  blackHoleBreathTween?.kill()
   resizeObserver?.disconnect()
 })
 
 watch(() => planets.value, () => {
   render()
-  animatePlanetFrame()
 }, { deep: true })
 
 watch(totalMonthlySpending, () => {
@@ -245,7 +251,7 @@ watch(totalMonthlySpending, () => {
     <p>Las suscripciones más caras quedan más cerca del agujero negro y los planetas se reparten a ambos lados con pequeñas variaciones verticales.</p>
   </div>
 
-  <div ref="planetFrameRef" class="planetas">
+  <div class="planetas">
     <canvas
       ref="canvasRef"
       @mousemove="handleMouseMove"
