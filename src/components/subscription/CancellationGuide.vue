@@ -9,9 +9,11 @@ const props = defineProps({
   }
 })
 
+// Usa la guia de la plataforma guardada; si falta, cae en la guia generica.
 const platform = computed(() => props.subscription.paymentPlatform || 'other')
 const guide = computed(() => CANCELLATION_GUIDES[platform.value] || CANCELLATION_GUIDES.other)
 
+// Abre el enlace de cancelacion definido por el usuario en una pestana nueva.
 function openCancellationLink() {
   if (props.subscription.cancellationLink) {
     window.open(props.subscription.cancellationLink, '_blank')

@@ -16,19 +16,23 @@ const animatedSavings = reactive({
 })
 
 const selectedSubs = computed(() => {
+  // Usa solo las suscripciones confirmadas en la ultima simulacion ejecutada.
   return subscriptionStore.subscriptions.filter(sub =>
     activeSimulation.value.includes(sub.id)
   )
 })
 
+// Calcula el ahorro mensual de las suscripciones seleccionadas.
 const monthlySavings = computed(() => {
   return calculateMonthlyCost(selectedSubs.value)
 })
 
+// Calcula el ahorro anual proyectado desde el ahorro mensual.
 const annualSavings = computed(() => {
   return calculateAnnualCost(selectedSubs.value)
 })
 
+// Anima las cifras de ahorro para que el cambio sea mas legible.
 function animateSavings() {
   amountTween?.kill()
 

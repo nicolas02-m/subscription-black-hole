@@ -36,6 +36,7 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  // Mantiene la posicion al volver atras y sube arriba en navegaciones nuevas.
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
       return savedPosition

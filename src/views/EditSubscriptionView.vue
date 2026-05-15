@@ -8,11 +8,13 @@ const route = useRoute()
 const router = useRouter()
 const subscriptionStore = useSubscriptionStore()
 
+// Obtiene la suscripcion que se va a editar desde el parametro de ruta.
 const subscription = computed(() => {
   const id = parseInt(route.params.id)
   return subscriptionStore.subscriptions.find(sub => sub.id === id)
 })
 
+// Guarda los cambios del formulario y navega de vuelta al detalle.
 function handleSubmit(payload) {
   subscriptionStore.updateSubscription(subscription.value.id, payload)
   router.push(`/subscriptions/${subscription.value.id}`)

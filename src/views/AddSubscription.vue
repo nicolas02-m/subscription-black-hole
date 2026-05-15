@@ -6,6 +6,7 @@ import { useSubscriptionStore } from '@/stores/subscription'
 const store = useSubscriptionStore()
 const successMessage = ref('')
 
+// Guarda una nueva suscripcion y muestra una confirmacion breve.
 function handleSubmit(data) {
   store.addSubscription(data)
   successMessage.value = 'Suscripción añadida con éxito'

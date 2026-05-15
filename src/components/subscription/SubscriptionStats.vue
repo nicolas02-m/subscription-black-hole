@@ -12,26 +12,32 @@ const props = defineProps({
 
 const subscriptionStore = useSubscriptionStore()
 
+// Normaliza el nombre mostrado cuando faltan datos.
 const subscriptionName = computed(() => {
   return props.subscription.name || 'N/A'
 })
 
+// Consulta al store la siguiente fecha de pago calculada.
 const nextPaymentDate = computed(() => {
   return subscriptionStore.nextPaymentFor(props.subscription)
 })
 
+// Consulta el gasto acumulado desde la fecha de creacion.
 const totalPaid = computed(() => {
   return subscriptionStore.totalPaidFor(props.subscription)
 })
 
+// Asegura un valor numerico para pintar el precio.
 const price = computed(() => {
   return props.subscription.price || 0
 })
 
+// Traduce el valor interno de categoria a una etiqueta visible.
 const category = computed(() => {
   return getCategoryLabel(props.subscription.category)
 })
 
+// Formatea la fecha de proximo pago para mostrarla en espanol.
 const formattedDate = computed(() => {
   if (!nextPaymentDate.value) return 'No disponible'
 

@@ -11,16 +11,19 @@ const { subscriptions, categories } = storeToRefs(subscriptionStore);
 
 const selectedCategory = ref('');
 
+// Devuelve la lista visible segun la categoria seleccionada.
 const filteredSubscriptions = computed(() => {
     if (!selectedCategory.value) return subscriptions.value;
     return subscriptions.value.filter(sub => sub.category === selectedCategory.value);
 });
 
+// Limita el filtro a categorias realmente usadas por las suscripciones.
 const usedCategories = computed(() => {
     const used = categories.value;
     return CATEGORIES.filter(cat => used.includes(cat.value));
 });
 
+// Guarda la categoria recibida desde el componente de filtro.
 const onCategorySelected = (cat) => {
     selectedCategory.value = cat;
 };

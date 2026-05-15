@@ -10,11 +10,13 @@ const route = useRoute()
 const router = useRouter()
 const subscriptionStore = useSubscriptionStore()
 
+// Busca la suscripcion actual usando el id recibido por la ruta.
 const subscription = computed(() => {
   const id = parseInt(route.params.id)
   return subscriptionStore.subscriptions.find(sub => sub.id === id)
 })
 
+// Elimina la suscripcion actual tras confirmacion y vuelve al dashboard.
 function deleteSubscription() {
   if (!subscription.value) return
 

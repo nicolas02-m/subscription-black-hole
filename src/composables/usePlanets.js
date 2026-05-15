@@ -22,10 +22,12 @@ const PLANET_SIZE_TIERS = [
   { maxMonthlyPrice: Infinity, radiusNormalized: 1 }
 ]
 
+// Asigna un tamano visual por tramos de coste mensual.
 function getRadiusNormalized(monthlyPrice) {
   return PLANET_SIZE_TIERS.find(tier => monthlyPrice < tier.maxMonthlyPrice).radiusNormalized
 }
 
+// Transforma suscripciones en planetas listos para pintar en canvas.
 export function usePlanets() {
   const store = useSubscriptionStore()
 
@@ -47,6 +49,7 @@ export function usePlanets() {
     const maxLogPrice = Math.log1p(maxPrice)
     const logPriceRange = maxLogPrice - minLogPrice || 1
 
+    // La escala logaritmica evita que una suscripcion muy cara aplaste al resto.
     return sorted.map((subscription, index) => {
       const logPrice = Math.log1p(subscription.monthlyPrice)
       const priceNormalized = (logPrice - minLogPrice) / logPriceRange

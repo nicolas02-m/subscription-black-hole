@@ -12,18 +12,21 @@ const { toggleSubscription, isSelected, getSelectedCount } = useSimulationSelect
 
 const selectedCategory = ref('')
 
+// Aplica el filtro de categoria sobre las suscripciones disponibles.
 const filteredSubscriptions = computed(() => {
   if (!selectedCategory.value) return subscriptions.value
 
   return subscriptions.value.filter(sub => sub.category === selectedCategory.value)
 })
 
+// Muestra solo categorias que tengan al menos una suscripcion asociada.
 const usedCategories = computed(() => {
   const used = categories.value
 
   return CATEGORIES.filter(cat => used.includes(cat.value))
 })
 
+// Guarda la categoria elegida para filtrar la lista de suscripciones.
 const onCategorySelected = (cat) => {
   selectedCategory.value = cat
 }

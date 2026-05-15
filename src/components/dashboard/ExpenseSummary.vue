@@ -12,6 +12,7 @@ const animatedTotals = reactive({
   annual: 0
 })
 
+// Anima los totales cuando cambia el gasto mensual o anual del store.
 function animateTotals() {
   totalTween?.kill()
 

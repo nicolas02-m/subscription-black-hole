@@ -20,31 +20,38 @@ const animatedState = {
 }
 
 const selectedSubs = computed(() => {
+  // Filtra las suscripciones incluidas en la simulacion activa.
   return subscriptionStore.subscriptions.filter(sub =>
     activeSimulation.value.includes(sub.id)
   )
 })
 
+// Coste mensual total antes de aplicar la simulacion.
 const currentMonthlyCost = computed(() => {
   return calculateMonthlyCost(subscriptionStore.subscriptions)
 })
 
+// Coste mensual que se ahorraria cancelando la seleccion simulada.
 const savingsFromSelection = computed(() => {
   return calculateMonthlyCost(selectedSubs.value)
 })
 
+// Coste mensual que quedaria despues del ahorro simulado.
 const remainingMonthlyCost = computed(() => {
   return calculateRemainingCost(currentMonthlyCost.value, savingsFromSelection.value)
 })
 
+// Porcentaje de ahorro calculado sobre el gasto actual.
 const savingsPercentage = computed(() => {
   return Number(calculateSavingsPercentage(savingsFromSelection.value, currentMonthlyCost.value))
 })
 
+// Limita el porcentaje entre 0 y 100 para proteger el dibujo del canvas.
 const clampedSavings = computed(() => {
   return Math.min(100, Math.max(0, savingsPercentage.value || 0))
 })
 
+// Pinta una etiqueta y su importe en la parte superior del canvas.
 function drawAmountBlock(ctx, x, label, value) {
   ctx.textAlign = 'center'
   ctx.fillStyle = 'white'
@@ -55,6 +62,7 @@ function drawAmountBlock(ctx, x, label, value) {
   ctx.fillText(formatCurrency(value), x, 114)
 }
 
+// Dibuja la comparativa visual entre gasto actual y gasto con ahorro.
 function drawBlackHole(ctx, width, height, currentCost, remainingCost, percentage) {
   ctx.fillStyle = '#0B0F1A'
   ctx.fillRect(0, 0, width, height)
@@ -79,6 +87,7 @@ function drawBlackHole(ctx, width, height, currentCost, remainingCost, percentag
   const minRadius = baseRadius * 0.15
   const savingsRadius = Math.max(minRadius, baseRadius * (1 - percentage / 100))
 
+  // El segundo agujero se reduce en proporcion al ahorro simulado.
   ctx.shadowColor = '#55e9f7'
   ctx.shadowBlur = 30
   ctx.shadowOffsetX = 0
@@ -98,6 +107,7 @@ function drawBlackHole(ctx, width, height, currentCost, remainingCost, percentag
   ctx.fillText(`${percentage.toFixed(1)}% ahorrado`, width / 2, height - 40)
 }
 
+// Prepara contexto y escala del canvas para pantallas de alta densidad.
 function getCanvasContext() {
   if (!canvasRef.value) return null
 
@@ -117,6 +127,7 @@ function getCanvasContext() {
   return { ctx, width, height }
 }
 
+// Redibuja la visualizacion con el estado animado actual.
 function renderBlackHole(state = animatedState) {
   const canvasContext = getCanvasContext()
   if (!canvasContext) return
@@ -131,6 +142,7 @@ function renderBlackHole(state = animatedState) {
   )
 }
 
+// Anima el cambio de importes y porcentaje antes de redibujar el canvas.
 function animateBlackHole() {
   activeTween?.kill()
 

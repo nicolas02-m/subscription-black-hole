@@ -1,4 +1,5 @@
 <script setup>
+// Recibe las categorias disponibles para construir el selector de filtro.
 const props = defineProps({
   categories: {
     type: Array,
@@ -6,6 +7,7 @@ const props = defineProps({
   }
 })
 
+// Emite la categoria escogida al componente padre.
 const emit = defineEmits(['categorySelected'])
 </script>
 

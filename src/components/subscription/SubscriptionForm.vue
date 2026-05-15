@@ -16,6 +16,7 @@ const props = defineProps({
 
 const emit = defineEmits(['submit'])
 
+// Crea el estado inicial del formulario para alta o reinicio.
 function createDefaultForm() {
   return {
     id: null,
@@ -31,6 +32,7 @@ function createDefaultForm() {
 
 const form = reactive(createDefaultForm())
 
+// Rellena el formulario mezclando valores recibidos con los valores por defecto.
 function populateForm(values) {
   const nextValues = {
     ...createDefaultForm(),
@@ -51,6 +53,7 @@ watch(() => props.initialValues, (values) => {
   populateForm(values)
 }, { immediate: true })
 
+// Construye el objeto que se enviara al store desde los campos del formulario.
 function buildPayload() {
   const payload = {
     name: form.name.trim(),
@@ -62,6 +65,7 @@ function buildPayload() {
     dateofCreation: form.dateofCreation
   }
 
+  // En edicion se conserva el id para actualizar la suscripcion existente.
   if (form.id !== null && form.id !== undefined) {
     payload.id = form.id
   }
@@ -69,10 +73,12 @@ function buildPayload() {
   return payload
 }
 
+// Distingue si el formulario esta creando una suscripcion o editandola.
 function isEditMode() {
   return props.initialValues !== null
 }
 
+// Reinicia el formulario; en edicion vuelve a los datos originales.
 function resetForm() {
   if (isEditMode()) {
     populateForm(props.initialValues)
@@ -82,6 +88,7 @@ function resetForm() {
   populateForm()
 }
 
+// Valida los campos obligatorios y emite la suscripcion lista para guardar.
 function handleSubmit() {
   if (!form.name.trim()) {
     alert('Introduce el nombre de la suscripción')
@@ -95,6 +102,7 @@ function handleSubmit() {
 
   const payload = buildPayload()
 
+  // En altas nuevas se genera un id simple basado en la marca de tiempo.
   if (!payload.id) {
     payload.id = Date.now()
   }
@@ -106,6 +114,7 @@ function handleSubmit() {
   }
 }
 
+// Pide confirmacion antes de limpiar para evitar perder cambios por accidente.
 function handleReset() {
   if (confirm('¿Estás seguro de que quieres limpiar el formulario?')) {
     resetForm()

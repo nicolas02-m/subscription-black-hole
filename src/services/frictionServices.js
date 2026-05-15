@@ -1,5 +1,6 @@
 const FRICTION_REPORTS_KEY = 'frictionReports'
 
+// Recupera reportes guardados y tolera datos corruptos en localStorage.
 function loadStoredReports() {
   const data = localStorage.getItem(FRICTION_REPORTS_KEY)
 
@@ -12,10 +13,12 @@ function loadStoredReports() {
   }
 }
 
+// Guarda en localStorage todos los reportes de friccion actualizados.
 function saveStoredReports(reports) {
   localStorage.setItem(FRICTION_REPORTS_KEY, JSON.stringify(reports))
 }
 
+// Guarda la valoracion del usuario sobre lo dificil que fue cancelar.
 export function saveFrictionReport(reportData) {
   const reports = loadStoredReports()
 

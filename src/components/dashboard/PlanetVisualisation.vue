@@ -21,6 +21,7 @@ const totalMonthlySpending = computed(() => {
   return store.monthlyTotal
 })
 
+// Calcula medidas responsive comunes para colocar agujero negro y planetas.
 function getSceneLayout(width, height) {
   const centerX = width / 2
   const centerY = height / 2
@@ -54,9 +55,11 @@ function getSceneLayout(width, height) {
   }
 }
 
+// Devuelve la posicion de un planeta segun el layout y su coste relativo.
 function getPlanetPosition(planet, layout, index = 0, total = 1) {
   const radius = Math.max(9, (10 + planet.radiusNormalized * 48) * layout.sceneScale)
 
+  // En pantallas compactas se usa una orbita circular para evitar solapes.
   if (layout.isCompact) {
     const angleStep = (Math.PI * 2) / Math.max(total, 1)
     const angle = -Math.PI / 2 + index * angleStep
@@ -82,6 +85,7 @@ function getPlanetPosition(planet, layout, index = 0, total = 1) {
   }
 }
 
+// Pinta un planeta y sus etiquetas; si esta en hover aumenta el radio y brillo.
 function drawPlanet(ctx, planet, position, isHovered = false) {
   const radius = isHovered ? position.radius + Math.max(5, position.radius * 0.14) : position.radius
 
@@ -111,6 +115,7 @@ function drawPlanet(ctx, planet, position, isHovered = false) {
   ctx.fillText(`${formatCurrency(planet.monthlyPrice)}/mes`, position.x, position.y + radius + 16)
 }
 
+// Dibuja toda la escena: fondo, agujero negro, total mensual y planetas.
 function drawVisualization(ctx, width, height) {
   ctx.fillStyle = '#0B0F1A'
   ctx.fillRect(0, 0, width, height)
@@ -143,6 +148,7 @@ function drawVisualization(ctx, width, height) {
   }))
   const hoveredPlanet = planetPositions.find(({ planet }) => planet.id === hoveredPlanetId.value)
 
+  // Primero se pintan los planetas normales y al final el hover queda encima.
   planetPositions.forEach(({ planet, position }) => {
     if (planet.id !== hoveredPlanetId.value) {
       drawPlanet(ctx, planet, position)
@@ -154,6 +160,7 @@ function drawVisualization(ctx, width, height) {
   }
 }
 
+// Ajusta el canvas a su tamano real y redibuja la visualizacion.
 function render() {
   if (!canvasRef.value) return
 
@@ -168,6 +175,7 @@ function render() {
   drawVisualization(ctx, width, height)
 }
 
+// Inicia la animacion de respiracion del agujero negro.
 function startBlackHoleBreathing() {
   blackHoleBreathTween?.kill()
 
@@ -182,6 +190,7 @@ function startBlackHoleBreathing() {
   })
 }
 
+// Detecta si el puntero esta dentro del radio de algun planeta.
 function getHoveredPlanetId(event) {
   if (!canvasRef.value) return null
 
@@ -191,6 +200,7 @@ function getHoveredPlanetId(event) {
   const mouseY = event.clientY - rect.top
   const layout = getSceneLayout(canvas.offsetWidth, canvas.offsetHeight)
 
+  // Se recorre al reves para priorizar el planeta dibujado mas arriba.
   return [...planets.value].reverse().find((planet) => {
     const originalIndex = planets.value.findIndex(({ id }) => id === planet.id)
     const { x, y, radius } = getPlanetPosition(planet, layout, originalIndex, planets.value.length)
@@ -200,6 +210,7 @@ function getHoveredPlanetId(event) {
   })?.id || null
 }
 
+// Actualiza el planeta en hover y cambia el cursor si corresponde.
 function handleMouseMove(event) {
   const nextHoveredPlanetId = getHoveredPlanetId(event)
 
@@ -210,6 +221,7 @@ function handleMouseMove(event) {
   render()
 }
 
+// Limpia el estado hover cuando el cursor sale del canvas.
 function handleMouseLeave() {
   if (!hoveredPlanetId.value) return
 

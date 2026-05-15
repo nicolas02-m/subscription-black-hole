@@ -10,6 +10,7 @@ defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 
+// Emite la plataforma elegida para actualizar el v-model del formulario padre.
 function selectPlatform(value) {
   emit('update:modelValue', value)
 }

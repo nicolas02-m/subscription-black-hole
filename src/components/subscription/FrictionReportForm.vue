@@ -37,6 +37,7 @@ const problemOptions = [
   { key: 'others', label: 'Otros' }
 ]
 
+// Devuelve el formulario de friccion a sus valores iniciales.
 function resetForm() {
   form.rating = '3'
   form.manySteps = false
@@ -47,12 +48,14 @@ function resetForm() {
   form.details = ''
 }
 
+// Extrae solo las opciones de problema marcadas por el usuario.
 function buildProblems() {
   return problemOptions
     .filter(option => form[option.key])
     .map(option => option.key)
 }
 
+// Guarda el reporte de friccion y muestra una confirmacion temporal.
 function handleSubmit() {
   const report = {
     subscriptionId: props.subscription.id,
